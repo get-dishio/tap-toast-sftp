@@ -245,6 +245,10 @@
       "date": {
         "type": ["string", "null"],
         "description": "Date folder name from SFTP path"
+      },
+      "guid": {
+        "type": ["string", "null"],
+        "description": "Unique identifier for the menu export"
       }
     }
   },
@@ -264,6 +268,10 @@
     "date": {
       "type": ["string", "null"],
       "description": "Date folder name from SFTP path"
+    },
+    "guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the menu export"
     }
   },
   "required": ["location_id", "date"]

@@ -9,6 +9,8 @@ import json
 import os
 import pandas as pd
 import concurrent.futures
+import hashlib
+import uuid
 from pathlib import Path
 from functools import partial
 
@@ -106,7 +108,9 @@ class CSVSFTPStream(ToastSFTPStream):
                 record["location_id"] = location_id
                 record["date"] = date_folder
 
-                batch.append(record)
+                # Validate primary keys before adding to batch
+                if self.validate_primary_keys(record):
+                    batch.append(record)
 
                 # Yield batch when it reaches the batch size
                 if len(batch) >= self.batch_size:
@@ -143,10 +147,12 @@ class CSVSFTPStream(ToastSFTPStream):
             self.logger.warning("No location IDs configured. No data will be extracted.")
             return
 
-        try:
-            # Establish a single SFTP connection for all file operations
-            self.connect_sftp()
+        # If using a shared client, we don't need to establish or close the connection
+        # as it's managed by the tap. If not using a shared client, connect_sftp will
+        # establish a connection.
+        self.connect_sftp()
 
+        try:
             for location_id in location_ids:
                 # Process date folders in parallel
                 yield from self.process_date_folders_parallel(
@@ -155,7 +161,7 @@ class CSVSFTPStream(ToastSFTPStream):
                     max_workers=self.max_workers,
                 )
         finally:
-            # Ensure connection is closed even if an exception occurs
+            # Only disconnect if we own the connection
             self.disconnect_sftp()
 
 
@@ -220,7 +226,9 @@ class XLSSFTPStream(ToastSFTPStream):
                 record["location_id"] = location_id
                 record["date"] = date_folder
 
-                batch.append(record)
+                # Validate primary keys before adding to batch
+                if self.validate_primary_keys(record):
+                    batch.append(record)
 
                 # Yield batch when it reaches the batch size
                 if len(batch) >= self.batch_size:
@@ -257,10 +265,12 @@ class XLSSFTPStream(ToastSFTPStream):
             self.logger.warning("No location IDs configured. No data will be extracted.")
             return
 
-        try:
-            # Establish a single SFTP connection for all file operations
-            self.connect_sftp()
+        # If using a shared client, we don't need to establish or close the connection
+        # as it's managed by the tap. If not using a shared client, connect_sftp will
+        # establish a connection.
+        self.connect_sftp()
 
+        try:
             for location_id in location_ids:
                 # Process date folders in parallel
                 yield from self.process_date_folders_parallel(
@@ -269,7 +279,7 @@ class XLSSFTPStream(ToastSFTPStream):
                     max_workers=self.max_workers,
                 )
         finally:
-            # Ensure connection is closed even if an exception occurs
+            # Only disconnect if we own the connection
             self.disconnect_sftp()
 
 
@@ -355,7 +365,9 @@ class JSONSFTPStream(ToastSFTPStream):
                             record["location_id"] = location_id
                             record["date"] = date_folder
 
-                            batch.append(record)
+                            # Validate primary keys before adding to batch
+                            if self.validate_primary_keys(record):
+                                batch.append(record)
 
                             # Yield batch when it reaches the batch size
                             if len(batch) >= self.batch_size:
@@ -366,7 +378,10 @@ class JSONSFTPStream(ToastSFTPStream):
                         # Add location_id and date to the record
                         records["location_id"] = location_id
                         records["date"] = date_folder
-                        yield records
+
+                        # Validate primary keys before yielding
+                        if self.validate_primary_keys(records):
+                            yield records
 
                     # Yield any remaining records
                     for record in batch:
@@ -401,10 +416,12 @@ class JSONSFTPStream(ToastSFTPStream):
             self.logger.warning("No location IDs configured. No data will be extracted.")
             return
 
-        try:
-            # Establish a single SFTP connection for all file operations
-            self.connect_sftp()
+        # If using a shared client, we don't need to establish or close the connection
+        # as it's managed by the tap. If not using a shared client, connect_sftp will
+        # establish a connection.
+        self.connect_sftp()
 
+        try:
             for location_id in location_ids:
                 # Process date folders in parallel
                 yield from self.process_date_folders_parallel(
@@ -413,5 +430,5 @@ class JSONSFTPStream(ToastSFTPStream):
                     max_workers=self.max_workers,
                 )
         finally:
-            # Ensure connection is closed even if an exception occurs
+            # Only disconnect if we own the connection
             self.disconnect_sftp()

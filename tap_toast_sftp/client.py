@@ -7,6 +7,8 @@ import typing as t
 import csv
 import json
 import os
+import hashlib
+import uuid
 from importlib import resources
 from pathlib import Path
 
@@ -363,23 +365,37 @@ class SFTPClient:
         self.logger.info(f"Starting to read file: {path}")
 
         # Retry parameters
-        max_retries = 3
+        max_retries = 5  # Increased from 3 to 5
         retry_delay = 2  # seconds
         retries = 0
 
         # Set a timeout for the file read operation
-        timeout = 60  # seconds
+        timeout = 300  # Increased from 60 to 300 seconds (5 minutes)
+
+        # Set chunk size for reading large files
+        chunk_size = 1024 * 1024  # 1MB chunks
 
         while retries < max_retries:
             try:
                 # Use a separate thread with a timeout to prevent hanging
                 with concurrent.futures.ThreadPoolExecutor() as executor:
-                    # Define a function to read the file
-                    def read_file():
+                    # Define a function to read the file in chunks
+                    def read_file_chunked():
+                        buffer = io.BytesIO()
+                        total_bytes = 0
                         with self._sftp.open(path, "rb") as f:
-                            return f.read()
+                            while True:
+                                chunk = f.read(chunk_size)
+                                if not chunk:
+                                    break
+                                buffer.write(chunk)
+                                total_bytes += len(chunk)
+                                # Log progress for large files
+                                if total_bytes % (10 * chunk_size) == 0:  # Log every 10MB
+                                    self.logger.info(f"Read {total_bytes / (1024 * 1024):.2f} MB from {path}")
+                        return buffer.getvalue()
 
-                    future = executor.submit(read_file)
+                    future = executor.submit(read_file_chunked)
                     try:
                         result = future.result(timeout=timeout)
                         self.logger.info(f"Successfully read {len(result)} bytes from {path}")
@@ -432,15 +448,18 @@ class SFTPClient:
 class ToastSFTPStream(Stream):
     """Stream class for ToastSFTP streams."""
 
-    def __init__(self, tap=None):
+    def __init__(self, tap=None, shared_sftp_client=None):
         """Initialize the stream.
 
         Args:
             tap: The tap instance.
+            shared_sftp_client: Optional shared SFTP client instance to use instead of creating a new one.
         """
         super().__init__(tap=tap)
-        self._sftp_client = None
-        self._connected = False
+        self._sftp_client = shared_sftp_client
+        self._owns_connection = shared_sftp_client is None
+        # Flag to control whether to generate unique IDs for records with missing primary keys
+        self.generate_unique_ids = True
 
     @property
     def sftp_client(self) -> SFTPClient:
@@ -458,22 +477,24 @@ class ToastSFTPStream(Stream):
 
         This method should be called once at the beginning of get_records
         to establish a single connection for all file operations.
+
+        If using a shared client, this is a no-op as the connection is managed externally.
         """
-        if not self._connected:
+        if self._owns_connection:
             self.logger.info("Establishing SFTP connection for stream %s", self.name)
             self.sftp_client.connect()
-            self._connected = True
 
     def disconnect_sftp(self) -> None:
         """Disconnect SFTP connection at the end of processing.
 
         This method should be called once at the end of get_records
         to properly close the SFTP connection.
+
+        If using a shared client, this is a no-op as the connection is managed externally.
         """
-        if self._connected and self._sftp_client is not None:
+        if self._owns_connection and self._sftp_client is not None:
             self.logger.info("Disconnecting SFTP connection for stream %s", self.name)
             self.sftp_client.disconnect()
-            self._connected = False
 
     @property
     def locations(self) -> list[dict]:
@@ -626,6 +647,85 @@ class ToastSFTPStream(Stream):
             self.logger.error(f"Error processing folder {latest_folder} for location {location_id}: {e}")
             # Return empty generator instead of raising an exception
             return
+
+    def generate_hash_id(self, record: dict) -> str:
+        """Generate a hash-based unique identifier for a record.
+
+        This method creates a deterministic hash from the record's content,
+        which can be used as a unique identifier when primary keys are missing.
+
+        Args:
+            record: The record to generate a hash for.
+
+        Returns:
+            A hash string that can be used as a unique identifier.
+        """
+        # Create a sorted, stable representation of the record for hashing
+        # Exclude any None or empty values to make the hash more stable
+        hash_content = {
+            k: str(v) for k, v in sorted(record.items())
+            if v is not None and v != ""
+        }
+
+        # Convert to a string and hash it
+        content_str = json.dumps(hash_content, sort_keys=True)
+        return hashlib.md5(content_str.encode('utf-8')).hexdigest()
+
+    def generate_uuid(self) -> str:
+        """Generate a random UUID.
+
+        Returns:
+            A random UUID string.
+        """
+        return str(uuid.uuid4())
+
+    def validate_primary_keys(self, record: dict) -> bool:
+        """Validate that all primary keys exist and are not empty in the record.
+
+        If primary keys are missing and generate_unique_ids is True,
+        generate and add a unique ID to the record.
+
+        Args:
+            record: The record to validate.
+
+        Returns:
+            True if all primary keys exist and are not empty, or if a unique ID was generated.
+            False otherwise.
+        """
+        # Get the primary keys for this stream
+        primary_keys = getattr(self, 'primary_keys', [])
+
+        # Check if any primary keys are missing or empty
+        missing_keys = []
+        for key in primary_keys:
+            if key not in record or record[key] is None or record[key] == "":
+                missing_keys.append(key)
+
+        # If no missing keys, validation passes
+        if not missing_keys:
+            return True
+
+        # If we're not generating unique IDs, log a warning and skip the record
+        if not self.generate_unique_ids:
+            self.logger.warning(
+                f"Record missing or empty primary key(s): {', '.join(missing_keys)}. "
+                f"This record will be skipped: {record}"
+            )
+            return False
+
+        # Generate a unique ID for the record
+        unique_id = self.generate_hash_id(record)
+
+        # Add the unique ID to the record for each missing primary key
+        # except for location_id and date which should always be present
+        for key in missing_keys:
+            if key not in ['location_id', 'date']:
+                record[key] = f"generated_{unique_id}"
+                self.logger.info(
+                    f"Generated unique ID for missing primary key '{key}': {record[key]}"
+                )
+
+        return True
 
     def get_records(
         self,

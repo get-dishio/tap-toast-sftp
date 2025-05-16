@@ -5,14 +5,17 @@ from __future__ import annotations
 from singer_sdk import Tap
 from singer_sdk import typing as th  # JSON schema typing helpers
 
-# TODO: Import your custom stream types here:
 from tap_toast_sftp import streams
+from tap_toast_sftp.client import SFTPClient
 
 
 class TapToastSFTP(Tap):
     """ToastSFTP tap class."""
 
     name = "tap-toast-sftp"
+
+    # Shared SFTP client for all streams
+    _shared_sftp_client = None
 
     config_jsonschema = th.PropertiesList(
         th.Property(
@@ -76,27 +79,58 @@ class TapToastSFTP(Tap):
         ),
     ).to_dict()
 
+    def get_shared_sftp_client(self):
+        """Get or create a shared SFTP client for all streams.
+
+        Returns:
+            A shared SFTPClient instance.
+        """
+        if self._shared_sftp_client is None:
+            self.logger.info("Creating shared SFTP client for all streams")
+            self._shared_sftp_client = SFTPClient(self.config)
+            self._shared_sftp_client.connect()
+        return self._shared_sftp_client
+
     def discover_streams(self) -> list:
         """Return a list of discovered streams.
 
         Returns:
             A list of discovered streams.
         """
+        # Get the shared SFTP client
+        shared_client = self.get_shared_sftp_client()
+
         return [
-            streams.AccountingReportStream(self),
-            streams.AllItemsReportStream(self),
-            streams.CashEntriesStream(self),
-            streams.CheckDetailsStream(self),
-            streams.HouseAccountExportStream(self),
-            streams.ItemSelectionDetailsStream(self),
-            streams.KitchenTimingsStream(self),
-            streams.MenuExportStream(self),
-            streams.MenuExportV2Stream(self),
-            streams.ModifiersSelectionDetailsStream(self),
-            streams.OrderDetailsStream(self),
-            streams.PaymentDetailsStream(self),
-            streams.TimeEntriesStream(self),
+            streams.AccountingReportStream(self, shared_sftp_client=shared_client),
+            streams.AllItemsReportStream(self, shared_sftp_client=shared_client),
+            streams.CashEntriesStream(self, shared_sftp_client=shared_client),
+            streams.CheckDetailsStream(self, shared_sftp_client=shared_client),
+            streams.HouseAccountExportStream(self, shared_sftp_client=shared_client),
+            streams.ItemSelectionDetailsStream(self, shared_sftp_client=shared_client),
+            streams.KitchenTimingsStream(self, shared_sftp_client=shared_client),
+            streams.MenuExportStream(self, shared_sftp_client=shared_client),
+            streams.MenuExportV2Stream(self, shared_sftp_client=shared_client),
+            streams.ModifiersSelectionDetailsStream(self, shared_sftp_client=shared_client),
+            streams.OrderDetailsStream(self, shared_sftp_client=shared_client),
+            streams.PaymentDetailsStream(self, shared_sftp_client=shared_client),
+            streams.TimeEntriesStream(self, shared_sftp_client=shared_client),
         ]
+
+    def sync_all(self):
+        """Sync all streams."""
+        try:
+            # Use the standard sync_all method
+            super().sync_all()
+        finally:
+            # Ensure the shared SFTP client is closed when done
+            self.close_shared_sftp_client()
+
+    def close_shared_sftp_client(self):
+        """Close the shared SFTP client if it exists."""
+        if self._shared_sftp_client is not None:
+            self.logger.info("Closing shared SFTP client")
+            self._shared_sftp_client.disconnect()
+            self._shared_sftp_client = None
 
 
 if __name__ == "__main__":
