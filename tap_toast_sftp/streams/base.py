@@ -80,8 +80,8 @@ class CSVSFTPStream(ToastSFTPStream):
         self.logger.info(f"Processing file {file_path} for location {location_id}, date {date_folder}")
 
         try:
-            # Use the existing SFTP client connection
-            content = self.sftp_client.get_file_content(file_path)
+            # Use cached file content if available
+            content = self.get_cached_file_content(location_id, date_folder, file_path)
 
             # If file not found or empty, return empty generator
             if not content:
@@ -197,8 +197,8 @@ class XLSSFTPStream(ToastSFTPStream):
         self.logger.info(f"Processing file {file_path} for location {location_id}, date {date_folder}")
 
         try:
-            # Use the existing SFTP client connection
-            content = self.sftp_client.get_file_content(file_path)
+            # Use cached file content if available
+            content = self.get_cached_file_content(location_id, date_folder, file_path)
 
             # If file not found or empty, return empty generator
             if not content:
@@ -336,7 +336,8 @@ class JSONSFTPStream(ToastSFTPStream):
                 self.logger.info(f"Processing file {file_path} for location {location_id}, date {date_folder}")
 
                 try:
-                    content = self.sftp_client.get_file_content(file_path)
+                    # Use cached file content if available
+                    content = self.get_cached_file_content(location_id, date_folder, file_path)
 
                     # If file not found or empty, skip to next file
                     if not content:

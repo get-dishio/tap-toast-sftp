@@ -32,6 +32,10 @@ SCHEMAS_DIR = resources.files(__package__) / "schemas"
 class SFTPClient:
     """SFTP client for connecting to Toast SFTP server."""
 
+    # Class-level cache for file contents to avoid redundant downloads
+    # Structure: {location_id: {date_folder: {file_path: content}}}
+    _file_content_cache = {}
+
     def __init__(self, config: dict) -> None:
         """Initialize the SFTP client.
 
@@ -444,6 +448,52 @@ class SFTPClient:
         """Exit context manager."""
         self.disconnect()
 
+    def get_cached_file_content(self, location_id: str, date_folder: str, file_path: str) -> bytes:
+        """Get file content from cache if available, otherwise download and cache it.
+
+        Args:
+            location_id: The location ID.
+            date_folder: The date folder name.
+            file_path: The full file path.
+
+        Returns:
+            The file content as bytes.
+        """
+        # Initialize cache structure if needed
+        if location_id not in self._file_content_cache:
+            self._file_content_cache[location_id] = {}
+        if date_folder not in self._file_content_cache[location_id]:
+            self._file_content_cache[location_id][date_folder] = {}
+
+        # Check if content is already cached
+        if file_path in self._file_content_cache[location_id][date_folder]:
+            self.logger.debug(f"Using cached content for {file_path}")
+            return self._file_content_cache[location_id][date_folder][file_path]
+
+        # Download and cache content
+        self.logger.info(f"Downloading and caching content for {file_path}")
+        content = self.get_file_content(file_path)
+        self._file_content_cache[location_id][date_folder][file_path] = content
+        return content
+
+    def clear_file_cache(self, location_id: str = None, date_folder: str = None):
+        """Clear the file content cache.
+
+        Args:
+            location_id: Optional location ID to clear cache for specific location.
+            date_folder: Optional date folder to clear cache for specific date.
+        """
+        if location_id is None:
+            self._file_content_cache = {}
+            self.logger.info("Cleared entire file content cache")
+        elif date_folder is None and location_id in self._file_content_cache:
+            self._file_content_cache[location_id] = {}
+            self.logger.info(f"Cleared file content cache for location {location_id}")
+        elif (location_id in self._file_content_cache and
+              date_folder in self._file_content_cache[location_id]):
+            self._file_content_cache[location_id][date_folder] = {}
+            self.logger.info(f"Cleared file content cache for location {location_id}, date {date_folder}")
+
 
 class ToastSFTPStream(Stream):
     """Stream class for ToastSFTP streams."""
@@ -523,6 +573,30 @@ class ToastSFTPStream(Stream):
             List of location ID strings.
         """
         return [location["id"] for location in self.locations]
+
+    def get_cached_file_content(self, location_id: str, date_folder: str, file_path: str) -> bytes:
+        """Get file content from cache if available, otherwise download and cache it.
+
+        Args:
+            location_id: The location ID.
+            date_folder: The date folder name.
+            file_path: The full file path.
+
+        Returns:
+            The file content as bytes.
+        """
+        # Use the SFTP client's cache method
+        return self.sftp_client.get_cached_file_content(location_id, date_folder, file_path)
+
+    def clear_file_cache(self, location_id: str = None, date_folder: str = None):
+        """Clear the file content cache.
+
+        Args:
+            location_id: Optional location ID to clear cache for specific location.
+            date_folder: Optional date folder to clear cache for specific date.
+        """
+        # Use the SFTP client's cache clearing method
+        self.sftp_client.clear_file_cache(location_id, date_folder)
 
     def get_path_for_location(self, base_path: str, location_id: str) -> str:
         """Get the file path for a specific location.

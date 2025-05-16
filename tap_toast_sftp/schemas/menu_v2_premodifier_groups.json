@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Menu V2 Premodifier Groups Schema",
+  "type": ["object", "null"],
+  "properties": {
+    "entityType": { "type": ["string", "null"] },
+    "name": { "type": ["string", "null"] },
+    "guid": { "type": ["string", "null"] },
+    "description": { "type": ["string", "null"] },
+    "id": { "type": ["string", "null"] },
+    "idString": { "type": ["string", "null"] },
+    "location_id": {
+      "type": ["string", "null"],
+      "description": "Location identifier from configuration"
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date folder name from SFTP path"
+    },
+    "menu_export_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the menu export"
+    }
+  },
+  "required": ["location_id", "date", "menu_export_guid", "guid"]
+}

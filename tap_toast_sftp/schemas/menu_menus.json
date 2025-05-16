@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Menu Menus Schema",
+  "type": ["object", "null"],
+  "properties": {
+    "entityType": {
+      "type": ["string", "null"],
+      "description": "The type of the menu component described by this JSON object"
+    },
+    "name": {
+      "type": ["string", "null"],
+      "description": "A descriptive identifier for the menu"
+    },
+    "guid": {
+      "type": ["string", "null"],
+      "description": "The unique identifier for the menu, assigned by the Toast POS"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "A written description of the menu"
+    },
+    "idString": {
+      "type": ["string", "null"],
+      "description": "This field is for Toast internal use only"
+    },
+    "orderableOnline": {
+      "type": ["boolean", "null", "string"],
+      "description": "Indicates whether the menu is available for online ordering"
+    },
+    "orderableOnlineStatus": {
+      "type": ["string", "null"],
+      "description": "Indicates whether the menu is available for online ordering"
+    },
+    "visibility": {
+      "type": ["string", "null"],
+      "description": "Indicates where the menu is displayed and who can see it"
+    },
+    "startTime": {
+      "type": ["string", "null"],
+      "description": "The time of day when a time-based menu becomes available"
+    },
+    "endTime": {
+      "type": ["string", "null"],
+      "description": "The time of day when a time-based menu stops being available"
+    },
+    "startTimeHHmm": {
+      "type": ["string", "null"],
+      "description": "The time of day when a time-based menu becomes available"
+    },
+    "endTimeHHmm": {
+      "type": ["string", "null"],
+      "description": "The time of day when a time-based menu stops being available"
+    },
+    "startTimeLocalStandardTime": {
+      "type": ["string", "null"],
+      "description": "The time of day when a time-based menu becomes available"
+    },
+    "endTimeLocalStandardTime": {
+      "type": ["string", "null"],
+      "description": "The time of day when a time-based menu stops being available"
+    },
+    "startTimeHHmmLocalStandardTime": {
+      "type": ["string", "null"],
+      "description": "The time of day when a time-based menu becomes available"
+    },
+    "endTimeHHmmLocalStandardTime": {
+      "type": ["string", "null"],
+      "description": "The time of day when a time-based menu stops being available"
+    },
+    "availableAllTimes": {
+      "type": ["boolean", "null"],
+      "description": "Indicates whether the menu is available at all times of the day"
+    },
+    "availableAllDays": {
+      "type": ["boolean", "null"],
+      "description": "Indicates whether the menu is available each day of the week"
+    },
+    "daysAvailableString": {
+      "type": ["array", "null"],
+      "items": {
+        "type": "string"
+      },
+      "description": "A JSON array of strings that lists the days of the week when the menu is available"
+    },
+    "daysAvailableBits": {
+      "type": ["string", "null"],
+      "description": "This field is a numeric version of the daysAvailableString field"
+    },
+    "imageLink": {
+      "type": ["string", "null"],
+      "description": "A URL to an image located on Amazon S3"
+    },
+    "location_id": {
+      "type": ["string", "null"],
+      "description": "Location identifier from configuration"
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date folder name from SFTP path"
+    },
+    "menu_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the menu"
+    }
+  },
+  "required": ["location_id", "date", "guid"]
+}

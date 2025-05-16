@@ -110,6 +110,18 @@ class TapToastSFTP(Tap):
             streams.KitchenTimingsStream(self, shared_sftp_client=shared_client),
             streams.MenuExportStream(self, shared_sftp_client=shared_client),
             streams.MenuExportV2Stream(self, shared_sftp_client=shared_client),
+            # Child streams for MenuExport
+            streams.MenuMenusStream(self, shared_sftp_client=shared_client),
+            streams.MenuGroupsStream(self, shared_sftp_client=shared_client),
+            streams.MenuGroupItemsStream(self, shared_sftp_client=shared_client),
+            # Child streams for MenuExportV2
+            streams.MenuV2MenusStream(self, shared_sftp_client=shared_client),
+            streams.MenuV2GroupsStream(self, shared_sftp_client=shared_client),
+            streams.MenuV2ItemsStream(self, shared_sftp_client=shared_client),
+            streams.MenuV2OptionGroupsStream(self, shared_sftp_client=shared_client),
+            streams.MenuV2OptionItemsStream(self, shared_sftp_client=shared_client),
+            streams.MenuV2PremodifierGroupsStream(self, shared_sftp_client=shared_client),
+            streams.MenuV2PremodifierItemsStream(self, shared_sftp_client=shared_client),
             streams.ModifiersSelectionDetailsStream(self, shared_sftp_client=shared_client),
             streams.OrderDetailsStream(self, shared_sftp_client=shared_client),
             streams.PaymentDetailsStream(self, shared_sftp_client=shared_client),
@@ -122,6 +134,11 @@ class TapToastSFTP(Tap):
             # Use the standard sync_all method
             super().sync_all()
         finally:
+            # Clear any cached file content
+            if self._shared_sftp_client:
+                self.logger.info("Clearing file content cache")
+                self._shared_sftp_client.clear_file_cache()
+
             # Ensure the shared SFTP client is closed when done
             self.close_shared_sftp_client()
 

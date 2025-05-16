@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Menu Group Items Schema",
+  "type": ["object", "null"],
+  "properties": {
+    "entityType": { "type": ["string", "null"] },
+    "name": { "type": ["string", "null"] },
+    "guid": { "type": ["string", "null"] },
+    "description": { "type": ["string", "null"] },
+    "sku": { "type": ["string", "null"] },
+    "plu": { "type": ["string", "null"] },
+    "price": { "type": ["number", "null"] },
+    "prices": {
+      "type": ["array", "null"],
+      "items": {
+        "type": "object",
+        "properties": {
+          "price": { "type": ["number", "null"] },
+          "priceLevel": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "maxSelections": { "type": ["string", "null"] },
+    "isDefault": { "type": ["boolean", "null"] },
+    "idString": { "type": ["string", "null"] },
+    "itemGroupGuid": { "type": ["string", "null"] },
+    "calories": { "type": ["number", "null"] },
+    "imageLink": { "type": ["string", "null"] },
+    "unitOfMeasure": { "type": ["string", "null"] },
+    "orderableOnline": { "type": ["string", "boolean", "null"] },
+    "visibility": { "type": ["string", "null"] },
+    "location_id": {
+      "type": ["string", "null"],
+      "description": "Location identifier from configuration"
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date folder name from SFTP path"
+    },
+    "menu_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the parent menu"
+    },
+    "group_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the parent group"
+    }
+  },
+  "required": ["location_id", "date", "menu_guid", "group_guid", "guid"]
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Menu V2 Option Groups Schema",
+  "type": ["object", "null"],
+  "properties": {
+    "entityType": { "type": ["string", "null"] },
+    "name": { "type": ["string", "null"] },
+    "guid": { "type": ["string", "null"] },
+    "minSelections": { "type": ["string", "null"] },
+    "maxSelections": { "type": ["string", "null"] },
+    "pricingMode": { "type": ["string", "null"] },
+    "idString": { "type": ["string", "null"] },
+    "visibility": { "type": ["string", "null"] },
+    "defaultOptionsChargePrice": { "type": ["string", "null"] },
+    "defaultOptionsSubstitutionPricing": { "type": ["string", "null"] },
+    "pricingStrategy": { "type": ["string", "null"] },
+    "pricingStrategyRules": { "type": ["string", "null"] },
+    "location_id": {
+      "type": ["string", "null"],
+      "description": "Location identifier from configuration"
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date folder name from SFTP path"
+    },
+    "menu_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the parent menu"
+    },
+    "group_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the parent group"
+    },
+    "item_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the parent item"
+    }
+  },
+  "required": ["location_id", "date", "menu_guid", "group_guid", "item_guid", "guid"]
+}

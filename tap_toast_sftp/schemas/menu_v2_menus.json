@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Menu V2 Menus Schema",
+  "type": ["object", "null"],
+  "properties": {
+    "entityType": { "type": ["string", "null"] },
+    "name": { "type": ["string", "null"] },
+    "guid": { "type": ["string", "null"] },
+    "description": { "type": ["string", "null"] },
+    "idString": { "type": ["string", "null"] },
+    "orderableOnline": { "type": ["string", "boolean", "null"] },
+    "orderableOnlineStatus": { "type": ["string", "null"] },
+    "visibility": { "type": ["string", "null"] },
+    "startTime": { "type": ["string", "null"] },
+    "endTime": { "type": ["string", "null"] },
+    "startTimeHHmm": { "type": ["string", "null"] },
+    "endTimeHHmm": { "type": ["string", "null"] },
+    "startTimeLocalStandardTime": { "type": ["string", "null"] },
+    "endTimeLocalStandardTime": { "type": ["string", "null"] },
+    "startTimeHHmmLocalStandardTime": { "type": ["string", "null"] },
+    "endTimeHHmmLocalStandardTime": { "type": ["string", "null"] },
+    "availableAllTimes": { "type": ["boolean", "null"] },
+    "availableAllDays": { "type": ["boolean", "null"] },
+    "daysAvailableBits": { "type": ["string", "null"] },
+    "daysAvailableString": {
+      "type": ["array", "null"],
+      "items": {
+        "type": "string"
+      }
+    },
+    "imageLink": { "type": ["string", "null"] },
+    "location_id": {
+      "type": ["string", "null"],
+      "description": "Location identifier from configuration"
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date folder name from SFTP path"
+    },
+    "menu_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the menu"
+    }
+  },
+  "required": ["location_id", "date", "guid"]
+}
