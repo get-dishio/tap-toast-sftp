@@ -16,7 +16,7 @@
         "item": { "type": ["string", "null"] }
       }
     },
-    "orderableOnline": { "type": ["string", "boolean", "null"] },
+    "orderableOnline": { "type": ["string", "null"] },
     "visibility": { "type": ["string", "null"] },
     "location_id": {
       "type": ["string", "null"],

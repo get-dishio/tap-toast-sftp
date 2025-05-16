@@ -15,7 +15,7 @@
             "guid": { "type": ["string", "null"] },
             "description": { "type": ["string", "null"] },
             "idString": { "type": ["string", "null"] },
-            "orderableOnline": { "type": ["string", "boolean", "null"] },
+            "orderableOnline": { "type": ["string", "null"] },
             "orderableOnlineStatus": { "type": ["string", "null"] },
             "visibility": { "type": ["string", "null"] },
             "startTime": { "type": ["string", "null"] },
@@ -26,8 +26,8 @@
             "endTimeLocalStandardTime": { "type": ["string", "null"] },
             "startTimeHHmmLocalStandardTime": { "type": ["string", "null"] },
             "endTimeHHmmLocalStandardTime": { "type": ["string", "null"] },
-            "availableAllTimes": { "type": ["boolean", "null", "string"] },
-            "availableAllDays": { "type": ["boolean", "null", "string"] },
+            "availableAllTimes": { "type": ["string", "null"] },
+            "availableAllDays": { "type": ["string", "null"] },
             "daysAvailableBits": { "type": ["string", "null"] },
             "daysAvailableString": {
               "type": ["array", "null"],
@@ -100,12 +100,12 @@
                                     "plu": { "type": ["string", "null"] },
                                     "maxSelections": { "type": ["string", "null"] },
                                     "price": { "type": ["number", "null"] },
-                                    "isDefault": { "type": ["boolean", "null", "string"] },
+                                    "isDefault": { "type": ["string", "null"] },
                                     "optionGroups": { "type": ["array", "null"] },
                                     "idString": { "type": ["string", "null"] },
                                     "itemGroupGuid": { "type": ["string", "null"] },
                                     "calories": { "type": ["number", "null"] },
-                                    "orderableOnline": { "type": ["string", "boolean", "null"] }
+                                    "orderableOnline": { "type": ["string", "null"] }
                                   }
                                 }
                               },
@@ -119,13 +119,13 @@
                           }
                         },
                         "maxSelections": { "type": ["string", "null"] },
-                        "isDefault": { "type": ["boolean", "null", "string"] },
+                        "isDefault": { "type": ["string", "null"] },
                         "idString": { "type": ["string", "null"] },
                         "itemGroupGuid": { "type": ["string", "null"] },
                         "calories": { "type": ["number", "null"] },
                         "imageLink": { "type": ["string", "null"] },
                         "unitOfMeasure": { "type": ["string", "null"] },
-                        "orderableOnline": { "type": ["string", "boolean", "null"] },
+                        "orderableOnline": { "type": ["string", "null"] },
                         "visibility": { "type": ["string", "null"] }
                       }
                     }
@@ -159,10 +159,10 @@
                               "calories": { "type": ["number", "null"] },
                               "imageLink": { "type": ["string", "null"] },
                               "unitOfMeasure": { "type": ["string", "null"] },
-                              "orderableOnline": { "type": ["string", "boolean", "null"] },
+                              "orderableOnline": { "type": ["string", "null"] },
                               "visibility": { "type": ["string", "null"] },
                               "maxSelections": { "type": ["string", "null"] },
-                              "isDefault": { "type": ["boolean", "null", "string"] },
+                              "isDefault": { "type": ["string", "null"] },
                               "itemGroupGuid": { "type": ["string", "null"] }
                             }
                           }
@@ -181,7 +181,7 @@
                             }
                           }
                         },
-                        "orderableOnline": { "type": ["string", "boolean", "null"] },
+                        "orderableOnline": { "type": ["string", "null"] },
                         "visibility": { "type": ["string", "null"] },
                         "images": {
                           "type": ["object", "null"],
@@ -192,7 +192,7 @@
                       }
                     }
                   },
-                  "orderableOnline": { "type": ["string", "boolean", "null"] },
+                  "orderableOnline": { "type": ["string", "null"] },
                   "visibility": { "type": ["string", "null"] }
                 }
               }
@@ -225,12 +225,12 @@
                   "plu": { "type": ["string", "null"] },
                   "maxSelections": { "type": ["string", "null"] },
                   "price": { "type": ["number", "null"] },
-                  "isDefault": { "type": ["boolean", "null", "string"] },
+                  "isDefault": { "type": ["string", "null"] },
                   "optionGroups": { "type": ["array", "null"] },
                   "idString": { "type": ["string", "null"] },
                   "itemGroupGuid": { "type": ["string", "null"] },
                   "calories": { "type": ["number", "null"] },
-                  "orderableOnline": { "type": ["string", "boolean", "null"] }
+                  "orderableOnline": { "type": ["string", "null"] }
                 }
               }
             }

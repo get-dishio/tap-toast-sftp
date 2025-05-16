@@ -11,11 +11,11 @@
     "plu": { "type": ["string", "null"] },
     "maxSelections": { "type": ["string", "null"] },
     "price": { "type": ["number", "null"] },
-    "isDefault": { "type": ["boolean", "null", "string"] },
+    "isDefault": { "type": ["string", "null"] },
     "idString": { "type": ["string", "null"] },
     "itemGroupGuid": { "type": ["string", "null"] },
     "calories": { "type": ["number", "null"] },
-    "orderableOnline": { "type": ["string", "boolean", "null"] },
+    "orderableOnline": { "type": ["string", "null"] },
     "location_id": {
       "type": ["string", "null"],
       "description": "Location identifier from configuration"

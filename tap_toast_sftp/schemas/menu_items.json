@@ -24,7 +24,7 @@
       "description": "Item category"
     },
     "active": {
-      "type": ["boolean", "string", "null"],
+      "type": ["string", "null"],
       "description": "Whether the item is active"
     },
     "last_updated": {

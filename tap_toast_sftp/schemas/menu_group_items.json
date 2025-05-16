@@ -21,13 +21,13 @@
       }
     },
     "maxSelections": { "type": ["string", "null"] },
-    "isDefault": { "type": ["boolean", "null", "string"] },
+    "isDefault": { "type": ["string", "null"] },
     "idString": { "type": ["string", "null"] },
     "itemGroupGuid": { "type": ["string", "null"] },
     "calories": { "type": ["number", "null"] },
     "imageLink": { "type": ["string", "null"] },
     "unitOfMeasure": { "type": ["string", "null"] },
-    "orderableOnline": { "type": ["string", "boolean", "null"] },
+    "orderableOnline": { "type": ["string", "null"] },
     "visibility": { "type": ["string", "null"] },
     "location_id": {
       "type": ["string", "null"],

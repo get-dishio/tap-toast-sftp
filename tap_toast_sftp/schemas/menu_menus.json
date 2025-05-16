@@ -24,7 +24,7 @@
       "description": "This field is for Toast internal use only"
     },
     "orderableOnline": {
-      "type": ["boolean", "null", "string"],
+      "type": ["string", "null"],
       "description": "Indicates whether the menu is available for online ordering"
     },
     "orderableOnlineStatus": {
@@ -68,11 +68,11 @@
       "description": "The time of day when a time-based menu stops being available"
     },
     "availableAllTimes": {
-      "type": ["boolean", "string", "null"],
+      "type": ["string", "null"],
       "description": "Indicates whether the menu is available at all times of the day"
     },
     "availableAllDays": {
-      "type": ["boolean", "string", "null"],
+      "type": ["string", "null"],
       "description": "Indicates whether the menu is available each day of the week"
     },
     "daysAvailableString": {

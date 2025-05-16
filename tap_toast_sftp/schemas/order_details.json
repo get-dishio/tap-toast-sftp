@@ -81,7 +81,7 @@
       "description": "Total Value"
     },
     "voided": {
-      "type": ["boolean", "string", "null"],
+      "type": ["string", "null"],
       "description": "True or False"
     },
     "paid": {
