@@ -1,0 +1,72 @@
+version: 1
+send_anonymous_usage_stats: true
+project_id: "tap-toast-sftp"
+default_environment: test
+venv:
+  backend: uv
+environments:
+- name: test
+plugins:
+  extractors:
+  - name: "tap-toast-sftp"
+    namespace: "tap_toast_sftp"
+    pip_url: -e .
+    capabilities:
+    - state
+    - catalog
+    - discover
+    - about
+    - stream-maps
+
+    settings:
+    - name: sftp_host
+      label: SFTP Host
+      description: The hostname or IP address of the SFTP server
+
+    - name: sftp_username
+      label: SFTP Username
+      description: The username to authenticate with the SFTP server
+
+    - name: sftp_password
+      kind: password
+      label: SFTP Password
+      description: The password to authenticate with the SFTP server
+      sensitive: true
+
+    - name: sftp_private_key
+      kind: password
+      label: SFTP Private SSH Key
+      description: The private SSH key to authenticate with the SFTP server
+      sensitive: true
+
+    - name: sftp_port
+      kind: integer
+      label: SFTP Port
+      description: The port of the SFTP server
+      value: 22
+
+    - name: locations
+      kind: array
+      label: Location IDs
+      description: List of location IDs to extract data for
+
+    - name: start_date
+      kind: date_iso8601
+      label: Start Date
+      description: Initial date to start extracting data from
+
+    settings_group_validation:
+    - [sftp_host, sftp_username]
+    - [sftp_password, sftp_private_key]
+
+    config:
+      start_date: '2010-01-01T00:00:00Z'
+      sftp_port: 22
+      locations:
+        - id: "12345"
+        - id: "67890"
+
+  loaders:
+  - name: target-jsonl
+    variant: andyh1203
+    pip_url: target-jsonl

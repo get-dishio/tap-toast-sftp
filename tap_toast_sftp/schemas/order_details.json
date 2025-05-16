@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Order Details Schema",
+  "type": "object",
+  "properties": {
+    "location": {
+      "type": ["string", "null"],
+      "description": "Restaurant Location"
+    },
+    "order_id": {
+      "type": ["string", "null"],
+      "description": "Order ID"
+    },
+    "order_num": {
+      "type": ["integer", "null"],
+      "description": "Order Number"
+    },
+    "checks": {
+      "type": ["string", "null"],
+      "description": "Check number(s)"
+    },
+    "opened": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp for Order Open Time"
+    },
+    "num_of_guests": {
+      "type": ["integer", "null"],
+      "description": "Number of Guests"
+    },
+    "tab_names": {
+      "type": ["string", "null"],
+      "description": "Guest Name for Tab"
+    },
+    "server": {
+      "type": ["string", "null"],
+      "description": "Name of Server who created order"
+    },
+    "table": {
+      "type": ["integer", "null"],
+      "description": "Number of Table"
+    },
+    "revenue_center": {
+      "type": ["string", "null"],
+      "description": "Name of Revenue Center"
+    },
+    "dining_area": {
+      "type": ["string", "null"],
+      "description": "Name of Dining Area"
+    },
+    "service": {
+      "type": ["string", "null"],
+      "description": "Day part"
+    },
+    "dining_options": {
+      "type": ["string", "null"],
+      "description": "Dining Options (defined by restaurant)"
+    },
+    "discount_amount": {
+      "type": ["number", "null"],
+      "description": "Discount Value"
+    },
+    "amount": {
+      "type": ["number", "null"],
+      "description": "Amount Value"
+    },
+    "tax": {
+      "type": ["number", "null"],
+      "description": "Taxes Value"
+    },
+    "tip": {
+      "type": ["number", "null"],
+      "description": "Tip Value"
+    },
+    "gratuity": {
+      "type": ["number", "null"],
+      "description": "Gratuity Value"
+    },
+    "total": {
+      "type": ["number", "null"],
+      "description": "Total Value"
+    },
+    "voided": {
+      "type": ["boolean", "null"],
+      "description": "True or False"
+    },
+    "paid": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp for Paid Time"
+    },
+    "closed": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp for Closed Time"
+    },
+    "duration_opened_to_paid": {
+      "type": ["string", "null"],
+      "description": "Time Duration from Open Timestamp to Paid Timestamp"
+    },
+    "order_source": {
+      "type": ["string", "null"],
+      "description": "Source of Order (In store, Online)"
+    },
+    "location_id": {
+      "type": ["string", "null"],
+      "description": "Location identifier from configuration"
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date folder name from SFTP path"
+    }
+  },
+  "required": ["location_id", "date"]
+}

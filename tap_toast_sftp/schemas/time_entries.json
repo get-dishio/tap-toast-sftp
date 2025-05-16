@@ -1,0 +1,138 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Time Entries Schema",
+  "type": "object",
+  "properties": {
+    "location": {
+      "type": ["string", "null"],
+      "description": "Restaurant location"
+    },
+    "location_code": {
+      "type": ["string", "null"],
+      "description": "Restaurant location code"
+    },
+    "id": {
+      "type": ["string", "null"],
+      "description": "Labor Event ID"
+    },
+    "guid": {
+      "type": ["string", "null"],
+      "description": "The unique identifier for this labor event, assigned by the Toast POS"
+    },
+    "employee_id": {
+      "type": ["integer", "null"],
+      "description": "Employee ID (Toast)"
+    },
+    "employee_guid": {
+      "type": ["string", "null"],
+      "description": "The unique identifier for the employee, assigned by the Toast POS"
+    },
+    "employee_external_id": {
+      "type": ["string", "null"],
+      "description": "Employee ID (Restaurant)"
+    },
+    "employee": {
+      "type": ["string", "null"],
+      "description": "Employee Name"
+    },
+    "job_id": {
+      "type": ["string", "null"],
+      "description": "Job or position ID (Toast)"
+    },
+    "job_guid": {
+      "type": ["string", "null"],
+      "description": "The unique identifier for the job, assigned by the Toast POS"
+    },
+    "job_code": {
+      "type": ["integer", "null"],
+      "description": "Job or position code (specified by restaurant)"
+    },
+    "job_title": {
+      "type": ["string", "null"],
+      "description": "Job title name (specified by restaurant)"
+    },
+    "in_date": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "A timestamp indicating when an employee clocked in"
+    },
+    "out_date": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "A timestamp indicating when an employee clocked out"
+    },
+    "auto_clock_out": {
+      "type": ["string", "null"],
+      "description": "Indicates if the employee was automatically clocked out by the system"
+    },
+    "total_hours": {
+      "type": ["number", "null"],
+      "description": "Hours calculated"
+    },
+    "unpaid_break_time": {
+      "type": ["number", "null"],
+      "description": "Unpaid break time calculated"
+    },
+    "paid_break_time": {
+      "type": ["number", "null"],
+      "description": "Paid break time calculated"
+    },
+    "payable_hours": {
+      "type": ["number", "null"],
+      "description": "Hours calculated (Total Hours less Unpaid Break Time)"
+    },
+    "cash_tips_declared": {
+      "type": ["number", "null"],
+      "description": "Total tips paid with cash"
+    },
+    "non_cash_tips": {
+      "type": ["number", "null"],
+      "description": "Total tips not paid with cash"
+    },
+    "total_gratuity": {
+      "type": ["number", "null"],
+      "description": "Total gratuities from checks"
+    },
+    "total_tips": {
+      "type": ["number", "null"],
+      "description": "Total tips calculated (Cash Tips Declared plus Non Cash Tips)"
+    },
+    "tips_withheld": {
+      "type": ["number", "null"],
+      "description": "The amount withheld from an employee's credit card tips and gratuities during the time entry"
+    },
+    "wage": {
+      "type": ["number", "null"],
+      "description": "Wage per hour"
+    },
+    "regular_hours": {
+      "type": ["number", "null"],
+      "description": "Number of non-overtime hours"
+    },
+    "overtime_hours": {
+      "type": ["number", "null"],
+      "description": "Number of overtime hours"
+    },
+    "regular_pay": {
+      "type": ["number", "null"],
+      "description": "The amount that an employee is paid for non-overtime hours in the time entry"
+    },
+    "overtime_pay": {
+      "type": ["number", "null"],
+      "description": "The amount that an employee is paid for overtime hours in the time entry"
+    },
+    "total_pay": {
+      "type": ["number", "null"],
+      "description": "The amount paid to an employee for non-overtime and overtime hours"
+    },
+    "location_id": {
+      "type": ["string", "null"],
+      "description": "Location identifier from configuration"
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date folder name from SFTP path"
+    }
+  },
+  "required": ["location_id", "date"]
+}

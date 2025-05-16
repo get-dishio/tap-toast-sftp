@@ -1,0 +1,192 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Payment Details Schema",
+  "type": "object",
+  "properties": {
+    "location": {
+      "type": ["string", "null"],
+      "description": "Restaurant Location"
+    },
+    "payment_id": {
+      "type": ["string", "null"],
+      "description": "Payment ID"
+    },
+    "order_id": {
+      "type": ["string", "null"],
+      "description": "Order ID"
+    },
+    "order_num": {
+      "type": ["integer", "null"],
+      "description": "Order Number"
+    },
+    "paid_date": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp for Order Paid Time"
+    },
+    "order_date": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp for Order Open Time"
+    },
+    "check_id": {
+      "type": ["string", "null"],
+      "description": "Check ID"
+    },
+    "check_num": {
+      "type": ["integer", "null"],
+      "description": "Check number"
+    },
+    "tab_name": {
+      "type": ["string", "null"],
+      "description": "Number of Table"
+    },
+    "server": {
+      "type": ["string", "null"],
+      "description": "Name of Server who created order"
+    },
+    "table": {
+      "type": ["string", "null"],
+      "description": "Number of Table"
+    },
+    "dining_area": {
+      "type": ["string", "null"],
+      "description": "Name of Dining Area"
+    },
+    "service": {
+      "type": ["string", "null"],
+      "description": "Day Part"
+    },
+    "dining_option": {
+      "type": ["string", "null"],
+      "description": "Dining Options (defined by restaurant)"
+    },
+    "house_acct_num": {
+      "type": ["integer", "null"],
+      "description": "House Account number payment applied to"
+    },
+    "amount": {
+      "type": ["number", "null"],
+      "description": "Amount Value"
+    },
+    "tip": {
+      "type": ["number", "null"],
+      "description": "Tip Value"
+    },
+    "gratuity": {
+      "type": ["number", "null"],
+      "description": "Gratuity Value"
+    },
+    "total": {
+      "type": ["number", "null"],
+      "description": "Total Value"
+    },
+    "swiped_card_amount": {
+      "type": ["number", "null"],
+      "description": "Swiped Card Amount"
+    },
+    "keyed_card_amount": {
+      "type": ["number", "null"],
+      "description": "Keyed Card Amount"
+    },
+    "amount_tendered": {
+      "type": ["number", "null"],
+      "description": "Cash Amount Value"
+    },
+    "refunded": {
+      "type": ["string", "null"],
+      "description": "Status of Refund"
+    },
+    "refund_date": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp of Refund Value"
+    },
+    "refund_amount": {
+      "type": ["number", "null"],
+      "description": "Refund Value"
+    },
+    "refund_tip_amount": {
+      "type": ["number", "null"],
+      "description": "Refund Tip Amount"
+    },
+    "void_user": {
+      "type": ["string", "null"],
+      "description": "Employee who voided the transaction"
+    },
+    "void_approver": {
+      "type": ["string", "null"],
+      "description": "Employee who approved the void transaction"
+    },
+    "void_date": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp of the void transaction"
+    },
+    "status": {
+      "type": ["string", "null"],
+      "description": "CC Processing status"
+    },
+    "type": {
+      "type": ["string", "null"],
+      "description": "Payment type (Credit, Cash, Gift Card)"
+    },
+    "cash_drawer": {
+      "type": ["string", "null"],
+      "description": "Cash Drawer used for payment"
+    },
+    "card_type": {
+      "type": ["string", "null"],
+      "description": "Card Brand"
+    },
+    "other_type": {
+      "type": ["string", "null"],
+      "description": "Other type of payment"
+    },
+    "email": {
+      "type": ["string", "null"],
+      "description": "Email of customer for digital receipt"
+    },
+    "phone": {
+      "type": ["string", "null"],
+      "description": "Phone number of customer for digital receipt"
+    },
+    "last_4_card_digits": {
+      "type": ["string", "null"],
+      "description": "Last 4 Card Digits of customer card"
+    },
+    "receipt": {
+      "type": ["string", "null"],
+      "description": "Receipt token for digital receipts"
+    },
+    "v_mc_d_fees": {
+      "type": ["number", "null"],
+      "description": "Visa/Mastercard/Discover processing fees"
+    },
+    "room_info": {
+      "type": ["string", "null"],
+      "description": "Room information"
+    },
+    "source": {
+      "type": ["string", "null"],
+      "description": "Source of the payment"
+    },
+    "last_4_gift_card_digits": {
+      "type": ["string", "null"],
+      "description": "Last 4 digits of gift card"
+    },
+    "first_5_gift_card_digits": {
+      "type": ["string", "null"],
+      "description": "First 5 digits of gift card"
+    },
+    "location_id": {
+      "type": ["string", "null"],
+      "description": "Location identifier from configuration"
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date folder name from SFTP path"
+    }
+  },
+  "required": ["location_id", "date"]
+}

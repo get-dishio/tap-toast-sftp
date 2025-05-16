@@ -1,2 +1,0 @@
-Col1,Col2
-data1,data2

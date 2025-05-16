@@ -1,0 +1,10 @@
+{
+  "sftp_host": "example.com",
+  "sftp_username": "testuser",
+  "sftp_password": "testpassword",
+  "locations": [
+    {
+      "id": "nonexistent_location"
+    }
+  ]
+}

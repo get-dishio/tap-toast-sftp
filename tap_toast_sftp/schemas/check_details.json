@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Check Details Schema",
+  "type": "object",
+  "properties": {
+    "location_code": {
+      "type": ["string", "null"],
+      "description": "This field is not used"
+    },
+    "opened_date": {
+      "type": ["string", "null"],
+      "description": "The date on which the check was created"
+    },
+    "opened_time": {
+      "type": ["string", "null"],
+      "description": "The time of day that the check was created, in twelve hour format"
+    },
+    "item_description": {
+      "type": ["string", "null"],
+      "description": "A comma-separated list of the text descriptions of each item in the check"
+    },
+    "server": {
+      "type": ["string", "null"],
+      "description": "The name of the server who created the check"
+    },
+    "tax": {
+      "type": ["number", "null"],
+      "description": "The currency amount of tax payments applied to the check"
+    },
+    "tender": {
+      "type": ["string", "null"],
+      "description": "The method of payment for the check"
+    },
+    "check_id": {
+      "type": ["string", "null"],
+      "description": "The unique identifier for the check"
+    },
+    "check_num": {
+      "type": ["integer", "null"],
+      "description": "The numeric identifier for the check"
+    },
+    "total": {
+      "type": ["number", "null"],
+      "description": "The total price of the check, in US dollars"
+    },
+    "customer_family": {
+      "type": ["string", "null"],
+      "description": "This field is not used"
+    },
+    "table_size": {
+      "type": ["integer", "null"],
+      "description": "The number of customers whose orders are part of the check"
+    },
+    "discount": {
+      "type": ["number", "null"],
+      "description": "The currency amount that the price of the check was reduced because of discounts"
+    },
+    "reason_of_discount": {
+      "type": ["string", "null"],
+      "description": "A description of the discount that was applied to the check"
+    },
+    "link": {
+      "type": ["string", "null"],
+      "description": "The URL of the check image"
+    },
+    "customer_id": {
+      "type": ["string", "null"],
+      "description": "The unique identifier of the customer associated with the check"
+    },
+    "customer": {
+      "type": ["string", "null"],
+      "description": "The name of the customer associated with the check"
+    },
+    "customer_phone": {
+      "type": ["string", "null"],
+      "description": "The telephone number of the customer associated with the check"
+    },
+    "customer_email": {
+      "type": ["string", "null"],
+      "description": "The email address of the customer associated with the check"
+    },
+    "location_id": {
+      "type": ["string", "null"],
+      "description": "Location identifier from configuration"
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date folder name from SFTP path"
+    }
+  },
+  "required": ["location_id", "date"]
+}

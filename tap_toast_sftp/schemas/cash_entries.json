@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Cash Entries Schema",
+  "type": "object",
+  "properties": {
+    "location": {
+      "type": ["string", "null"],
+      "description": "Restaurant Location"
+    },
+    "entry_id": {
+      "type": ["string", "null"],
+      "description": "Entry ID"
+    },
+    "created_date": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Date"
+    },
+    "action": {
+      "type": ["string", "null"],
+      "description": "Specific Cash Action"
+    },
+    "amount": {
+      "type": ["number", "null"],
+      "description": "Amount"
+    },
+    "cash_drawer": {
+      "type": ["string", "null"],
+      "description": "Assigned Cash Drawer Name"
+    },
+    "payout_reason": {
+      "type": ["string", "null"],
+      "description": "Reason"
+    },
+    "no_sale_reason": {
+      "type": ["string", "null"],
+      "description": "Reason for no sale"
+    },
+    "comment": {
+      "type": ["string", "null"],
+      "description": "Comment"
+    },
+    "employee": {
+      "type": ["string", "null"],
+      "description": "Employee Name who created entry"
+    },
+    "employee_2": {
+      "type": ["string", "null"],
+      "description": "Employee Name who received Amount"
+    },
+    "location_id": {
+      "type": ["string", "null"],
+      "description": "Location identifier from configuration"
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date folder name from SFTP path"
+    }
+  },
+  "required": ["location_id", "date"]
+}

@@ -1,0 +1,79 @@
+[project]
+name = "tap-toast-sftp"
+version = "0.0.1"
+description = "Singer tap for ToastSFTP, built with the Meltano Singer SDK."
+readme = "README.md"
+authors = [{ name = "Dish.io", email = "integrations@dish.io" }]
+keywords = [
+    "ELT",
+    "ToastSFTP",
+]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+license-files = [ "LICENSE" ]
+requires-python = ">=3.9"
+dependencies = [
+    "singer-sdk~=0.46.3",
+    "paramiko>=3.0.0",
+    "pandas>=2.0.0",
+    "openpyxl>=3.1.0",
+    "xlrd (>=2.0.1)",
+]
+
+[project.optional-dependencies]
+s3 = [
+    "fs-s3fs~=1.1.1",
+]
+
+[project.scripts]
+# CLI declaration
+tap-toast-sftp = 'tap_toast_sftp.tap:TapToastSFTP.cli'
+
+[dependency-groups]
+dev = [
+    { include-group = "test" },
+]
+test = [
+    "pytest>=8",
+    "singer-sdk[testing]",
+]
+
+[tool.pytest.ini_options]
+addopts = [
+    "--durations=10",
+]
+
+[tool.mypy]
+warn_unused_configs = true
+
+[tool.ruff]
+target-version = "py39"
+
+[tool.ruff.lint]
+ignore = [
+    "COM812",  # missing-trailing-comma
+]
+select = ["ALL"]
+
+[tool.ruff.lint.flake8-annotations]
+allow-star-arg-any = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+
+[tool.poetry.group.dev.dependencies]
+openpyxl = "^3.1.5"
+
+[build-system]
+requires = [
+    "hatchling>=1,<2",
+]
+build-backend = "hatchling.build"

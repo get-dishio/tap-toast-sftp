@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Menu Items Schema",
+  "type": "object",
+  "properties": {
+    "item_id": {
+      "type": ["string", "null"],
+      "description": "Unique item identifier"
+    },
+    "name": {
+      "type": ["string", "null"],
+      "description": "Item name"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "Item description"
+    },
+    "price": {
+      "type": ["number", "null"],
+      "description": "Item price"
+    },
+    "category": {
+      "type": ["string", "null"],
+      "description": "Item category"
+    },
+    "active": {
+      "type": ["boolean", "null"],
+      "description": "Whether the item is active"
+    },
+    "last_updated": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Last update timestamp"
+    },
+    "location_id": {
+      "type": ["string", "null"],
+      "description": "Location identifier"
+    }
+  },
+  "required": ["item_id", "location_id"]
+}

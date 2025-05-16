@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "All Items Report Schema",
+  "type": "object",
+  "properties": {
+    "master_id": {
+      "type": ["string", "null"],
+      "description": "Item Master ID"
+    },
+    "item_id": {
+      "type": ["string", "null"],
+      "description": "Item ID"
+    },
+    "parent_id": {
+      "type": ["string", "null"],
+      "description": "Parent Item ID"
+    },
+    "menu_name": {
+      "type": ["string", "null"],
+      "description": "Menu Name"
+    },
+    "menu_group": {
+      "type": ["string", "null"],
+      "description": "Menu Group Name"
+    },
+    "subgroup": {
+      "type": ["string", "null"],
+      "description": "Menu Subgroup Name"
+    },
+    "menu_item": {
+      "type": ["string", "null"],
+      "description": "Menu Item Name"
+    },
+    "tags": {
+      "type": ["string", "null"],
+      "description": "Item tags"
+    },
+    "avg_price": {
+      "type": ["number", "null"],
+      "description": "Average Net Price of item"
+    },
+    "item_qty_incl_voids": {
+      "type": ["number", "null"],
+      "description": "Item Quantity including voids"
+    },
+    "pct_of_ttl_qty_incl_voids": {
+      "type": ["number", "null"],
+      "description": "Percent of Total Quantity including voids"
+    },
+    "gross_amount_incl_voids": {
+      "type": ["number", "null"],
+      "description": "Gross amount of Item sold including voids"
+    },
+    "pct_of_ttl_amt_incl_voids": {
+      "type": ["number", "null"],
+      "description": "Percent of Total Gross Amount including voids"
+    },
+    "item_qty": {
+      "type": ["number", "null"],
+      "description": "Item Quantity"
+    },
+    "gross_amount": {
+      "type": ["number", "null"],
+      "description": "Gross Amount excluding voids"
+    },
+    "void_qty": {
+      "type": ["number", "null"],
+      "description": "Void quantity of Item"
+    },
+    "void_amount": {
+      "type": ["number", "null"],
+      "description": "Void Amount Value of Item"
+    },
+    "discount_amount": {
+      "type": ["number", "null"],
+      "description": "Discount Value of Item"
+    },
+    "net_amount": {
+      "type": ["number", "null"],
+      "description": "Net Amount of Item (Gross less discount)"
+    },
+    "num_orders": {
+      "type": ["integer", "null"],
+      "description": "Number of Orders Item appears upon"
+    },
+    "pct_of_ttl_num_orders": {
+      "type": ["number", "null"],
+      "description": "Orders as a percent of Menu Group total orders"
+    },
+    "pct_qty_group": {
+      "type": ["number", "null"],
+      "description": "Items as a percent of Menu Group total items"
+    },
+    "pct_qty_menu": {
+      "type": ["number", "null"],
+      "description": "Items as a percent of Menu total items"
+    },
+    "pct_qty_all": {
+      "type": ["number", "null"],
+      "description": "Items as a percent of All total items"
+    },
+    "pct_net_amt_group": {
+      "type": ["number", "null"],
+      "description": "Net amount as a percent of Total Menu Group Net Amount"
+    },
+    "pct_net_amt_menu": {
+      "type": ["number", "null"],
+      "description": "Net amount as a percent of Total Menu Net Amount"
+    },
+    "pct_net_amt_all": {
+      "type": ["number", "null"],
+      "description": "Net amount as a percent of Total Net Amount"
+    },
+    "location_id": {
+      "type": ["string", "null"],
+      "description": "Location identifier from configuration"
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date folder name from SFTP path"
+    }
+  },
+  "required": ["location_id", "date"]
+}

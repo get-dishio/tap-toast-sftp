@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "House Account Export Schema",
+  "type": "object",
+  "properties": {
+    "account_number": {
+      "type": ["string", "null"],
+      "description": "House account number"
+    },
+    "account_name": {
+      "type": ["string", "null"],
+      "description": "House account name"
+    },
+    "balance": {
+      "type": ["number", "null"],
+      "description": "Current balance of the house account"
+    },
+    "credit_limit": {
+      "type": ["number", "null"],
+      "description": "Credit limit of the house account"
+    },
+    "status": {
+      "type": ["string", "null"],
+      "description": "Status of the house account (e.g., Active, Inactive)"
+    },
+    "location_id": {
+      "type": ["string", "null"],
+      "description": "Location identifier from configuration"
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date folder name from SFTP path"
+    }
+  },
+  "required": ["location_id", "date"]
+}

@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Kitchen Timings Schema",
+  "type": "object",
+  "properties": {
+    "location": {
+      "type": ["string", "null"],
+      "description": "The location name"
+    },
+    "id": {
+      "type": ["string", "null"],
+      "description": "The unique identifier for the check"
+    },
+    "server": {
+      "type": ["string", "null"],
+      "description": "The name of the employee who created the check"
+    },
+    "check_num": {
+      "type": ["integer", "null"],
+      "description": "The numeric identifier for the check"
+    },
+    "table": {
+      "type": ["integer", "null"],
+      "description": "The number of the table, if available"
+    },
+    "check_opened": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "The time of day that the check was opened, in twelve-hour format"
+    },
+    "station": {
+      "type": ["string", "null"],
+      "description": "The prep station that received the ticket"
+    },
+    "expediter_level": {
+      "type": ["integer", "null"],
+      "description": "The Two-Level Fulfillment setting for the expediter: 1 for single level or 2 for two levels"
+    },
+    "fired_date": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "The time of day that the ticket was fired, in twelve-hour format"
+    },
+    "fulfilled_date": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "The time of day that the ticket was fulfilled, in twelve-hour format"
+    },
+    "fulfillment_time": {
+      "type": ["string", "null"],
+      "description": "The amount of time it took for the ticket to be fulfilled"
+    },
+    "fulfilled_by": {
+      "type": ["string", "null"],
+      "description": "The name of the employee who fulfilled the ticket"
+    },
+    "location_id": {
+      "type": ["string", "null"],
+      "description": "Location identifier from configuration"
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date folder name from SFTP path"
+    }
+  },
+  "required": ["location_id", "date"]
+}
