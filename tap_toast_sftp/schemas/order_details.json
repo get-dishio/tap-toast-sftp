@@ -12,7 +12,7 @@
       "description": "Order ID"
     },
     "order_num": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "Order Number"
     },
     "checks": {
@@ -25,7 +25,7 @@
       "description": "Timestamp for Order Open Time"
     },
     "num_of_guests": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "Number of Guests"
     },
     "tab_names": {
@@ -37,7 +37,7 @@
       "description": "Name of Server who created order"
     },
     "table": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "Number of Table"
     },
     "revenue_center": {

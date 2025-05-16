@@ -12,7 +12,7 @@
       "description": "Order ID"
     },
     "order_num": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "Order Number"
     },
     "sent_date": {
@@ -34,7 +34,7 @@
       "description": "Name of the server who created order"
     },
     "table": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "Number of Table"
     },
     "dining_area": {

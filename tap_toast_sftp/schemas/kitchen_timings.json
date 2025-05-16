@@ -16,11 +16,11 @@
       "description": "The name of the employee who created the check"
     },
     "check_num": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "The numeric identifier for the check"
     },
     "table": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "The number of the table, if available"
     },
     "check_opened": {
@@ -33,7 +33,7 @@
       "description": "The prep station that received the ticket"
     },
     "expediter_level": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "The Two-Level Fulfillment setting for the expediter: 1 for single level or 2 for two levels"
     },
     "fired_date": {

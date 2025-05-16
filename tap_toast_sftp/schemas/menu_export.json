@@ -38,11 +38,11 @@
         "description": "Indicates where the menu is displayed and who can see it"
       },
       "startTime": {
-        "type": ["integer", "null"],
+        "type": ["string", "null"],
         "description": "The time of day when a time-based menu becomes available"
       },
       "endTime": {
-        "type": ["integer", "null"],
+        "type": ["string", "null"],
         "description": "The time of day when a time-based menu stops being available"
       },
       "startTimeHHmm": {
@@ -54,11 +54,11 @@
         "description": "The time of day when a time-based menu stops being available"
       },
       "startTimeLocalStandardTime": {
-        "type": ["integer", "null"],
+        "type": ["string", "null"],
         "description": "The time of day when a time-based menu becomes available"
       },
       "endTimeLocalStandardTime": {
-        "type": ["integer", "null"],
+        "type": ["string", "null"],
         "description": "The time of day when a time-based menu stops being available"
       },
       "startTimeHHmmLocalStandardTime": {
@@ -85,7 +85,7 @@
         "description": "A JSON array of strings that lists the days of the week when the menu is available"
       },
       "daysAvailableBits": {
-        "type": ["integer", "null"],
+        "type": ["string", "null"],
         "description": "This field is a numeric version of the daysAvailableString field"
       },
       "imageLink": {
@@ -101,7 +101,7 @@
             "name": { "type": ["string", "null"] },
             "guid": { "type": ["string", "null"] },
             "description": { "type": ["string", "null"] },
-            "id": { "type": ["integer", "null"] },
+            "id": { "type": ["string", "null"] },
             "idString": { "type": ["string", "null"] },
             "imageLink": { "type": ["string", "null"] },
             "items": {
@@ -134,8 +134,8 @@
                         "entityType": { "type": ["string", "null"] },
                         "name": { "type": ["string", "null"] },
                         "guid": { "type": ["string", "null"] },
-                        "minSelections": { "type": ["integer", "null"] },
-                        "maxSelections": { "type": ["integer", "null"], "description": "Maximum number of selections allowed" },
+                        "minSelections": { "type": ["string", "null"] },
+                        "maxSelections": { "type": ["string", "null"], "description": "Maximum number of selections allowed" },
                         "pricingMode": { "type": ["string", "null"] },
                         "items": {
                           "type": ["array", "null"],
@@ -148,7 +148,7 @@
                               "description": { "type": ["string", "null"] },
                               "sku": { "type": ["string", "null"] },
                               "plu": { "type": ["string", "null"] },
-                              "maxSelections": { "type": ["integer", "null"] },
+                              "maxSelections": { "type": ["string", "null"] },
                               "price": { "type": ["number", "null"] },
                               "isDefault": { "type": ["boolean", "null"] },
                               "optionGroups": { "type": ["array", "null"] },
@@ -174,7 +174,7 @@
                   "unitOfMeasure": { "type": ["string", "null"] },
                   "orderableOnline": { "type": ["string", "boolean", "null"] },
                   "visibility": { "type": ["string", "null"] },
-                  "maxSelections": { "type": ["integer", "null"] },
+                  "maxSelections": { "type": ["string", "null"] },
                   "isDefault": { "type": ["boolean", "null"] },
                   "itemGroupGuid": { "type": ["string", "null"] }
                 }
@@ -189,7 +189,7 @@
                   "name": { "type": ["string", "null"] },
                   "guid": { "type": ["string", "null"] },
                   "description": { "type": ["string", "null"] },
-                  "id": { "type": ["integer", "null"] },
+                  "id": { "type": ["string", "null"] },
                   "idString": { "type": ["string", "null"] },
                   "imageLink": { "type": ["string", "null"] },
                   "items": {
@@ -224,7 +224,7 @@
                         "unitOfMeasure": { "type": ["string", "null"] },
                         "orderableOnline": { "type": ["string", "boolean", "null"] },
                         "visibility": { "type": ["string", "null"] },
-                        "maxSelections": { "type": ["integer", "null"] },
+                        "maxSelections": { "type": ["string", "null"] },
                         "isDefault": { "type": ["boolean", "null"] },
                         "itemGroupGuid": { "type": ["string", "null"] }
                       }
@@ -315,11 +315,11 @@
       "description": "Indicates where the menu is displayed and who can see it"
     },
     "startTime": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "The time of day when a time-based menu becomes available"
     },
     "endTime": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "The time of day when a time-based menu stops being available"
     },
     "startTimeHHmm": {
@@ -331,11 +331,11 @@
       "description": "The time of day when a time-based menu stops being available"
     },
     "startTimeLocalStandardTime": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "The time of day when a time-based menu becomes available"
     },
     "endTimeLocalStandardTime": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "The time of day when a time-based menu stops being available"
     },
     "startTimeHHmmLocalStandardTime": {
@@ -362,7 +362,7 @@
       "description": "A JSON array of strings that lists the days of the week when the menu is available"
     },
     "daysAvailableBits": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "This field is a numeric version of the daysAvailableString field"
     },
     "imageLink": {
@@ -378,7 +378,7 @@
           "name": { "type": ["string", "null"] },
           "guid": { "type": ["string", "null"] },
           "description": { "type": ["string", "null"] },
-          "id": { "type": ["integer", "null"] },
+          "id": { "type": ["string", "null"] },
           "idString": { "type": ["string", "null"] },
           "imageLink": { "type": ["string", "null"] },
           "items": {
@@ -414,8 +414,8 @@
                       "entityType": { "type": ["string", "null"] },
                       "name": { "type": ["string", "null"] },
                       "guid": { "type": ["string", "null"] },
-                      "minSelections": { "type": ["integer", "null"] },
-                      "maxSelections": { "type": ["integer", "null"], "description": "Maximum number of selections allowed" },
+                      "minSelections": { "type": ["string", "null"] },
+                      "maxSelections": { "type": ["string", "null"], "description": "Maximum number of selections allowed" },
                       "pricingMode": { "type": ["string", "null"] },
                       "items": {
                         "type": ["array", "null"],
@@ -428,7 +428,7 @@
                             "description": { "type": ["string", "null"] },
                             "sku": { "type": ["string", "null"] },
                             "plu": { "type": ["string", "null"] },
-                            "maxSelections": { "type": ["integer", "null"] },
+                            "maxSelections": { "type": ["string", "null"] },
                             "price": { "type": ["number", "null"] },
                             "isDefault": { "type": ["boolean", "null"] },
                             "optionGroups": { "type": ["array", "null"] },
@@ -454,7 +454,7 @@
                 "unitOfMeasure": { "type": ["string", "null"] },
                 "orderableOnline": { "type": ["string", "boolean", "null"] },
                 "visibility": { "type": ["string", "null"] },
-                "maxSelections": { "type": ["integer", "null"] },
+                "maxSelections": { "type": ["string", "null"] },
                 "isDefault": { "type": ["boolean", "null"] },
                 "itemGroupGuid": { "type": ["string", "null"] }
               }
@@ -469,7 +469,7 @@
                 "name": { "type": ["string", "null"] },
                 "guid": { "type": ["string", "null"] },
                 "description": { "type": ["string", "null"] },
-                "id": { "type": ["integer", "null"] },
+                "id": { "type": ["string", "null"] },
                 "idString": { "type": ["string", "null"] },
                 "imageLink": { "type": ["string", "null"] },
                 "items": {
@@ -504,7 +504,7 @@
                       "unitOfMeasure": { "type": ["string", "null"] },
                       "orderableOnline": { "type": ["string", "boolean", "null"] },
                       "visibility": { "type": ["string", "null"] },
-                      "maxSelections": { "type": ["integer", "null"] },
+                      "maxSelections": { "type": ["string", "null"] },
                       "isDefault": { "type": ["boolean", "null"] },
                       "itemGroupGuid": { "type": ["string", "null"] }
                     }

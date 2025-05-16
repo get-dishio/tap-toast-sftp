@@ -16,7 +16,7 @@
       "description": "Order ID"
     },
     "order_num": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "Order Number"
     },
     "paid_date": {
@@ -34,7 +34,7 @@
       "description": "Check ID"
     },
     "check_num": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "Check number"
     },
     "tab_name": {
@@ -62,7 +62,7 @@
       "description": "Dining Options (defined by restaurant)"
     },
     "house_acct_num": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "House Account number payment applied to"
     },
     "amount": {

@@ -36,7 +36,7 @@
       "description": "The unique identifier for the check"
     },
     "check_num": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "The numeric identifier for the check"
     },
     "total": {
@@ -48,7 +48,7 @@
       "description": "This field is not used"
     },
     "table_size": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "The number of customers whose orders are part of the check"
     },
     "discount": {

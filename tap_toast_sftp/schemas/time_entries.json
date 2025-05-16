@@ -20,7 +20,7 @@
       "description": "The unique identifier for this labor event, assigned by the Toast POS"
     },
     "employee_id": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "Employee ID (Toast)"
     },
     "employee_guid": {
@@ -44,7 +44,7 @@
       "description": "The unique identifier for the job, assigned by the Toast POS"
     },
     "job_code": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "Job or position code (specified by restaurant)"
     },
     "job_title": {

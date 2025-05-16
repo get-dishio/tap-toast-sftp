@@ -4,7 +4,7 @@
   "type": "object",
   "properties": {
     "gl_account": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "Assigned general ledger (GL) code"
     },
     "description": {

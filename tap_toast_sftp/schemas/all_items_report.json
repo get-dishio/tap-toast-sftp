@@ -80,7 +80,7 @@
       "description": "Net Amount of Item (Gross less discount)"
     },
     "num_orders": {
-      "type": ["integer", "null"],
+      "type": ["string", "null"],
       "description": "Number of Orders Item appears upon"
     },
     "pct_of_ttl_num_orders": {
