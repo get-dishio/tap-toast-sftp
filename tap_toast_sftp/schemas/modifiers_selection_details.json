@@ -114,7 +114,7 @@
       "description": "Quantity"
     },
     "void": {
-      "type": ["boolean", "null"],
+      "type": ["boolean", "string", "null"],
       "description": "True or False"
     },
     "void_reason_id": {

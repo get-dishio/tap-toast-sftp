@@ -19,8 +19,8 @@
     "endTimeLocalStandardTime": { "type": ["string", "null"] },
     "startTimeHHmmLocalStandardTime": { "type": ["string", "null"] },
     "endTimeHHmmLocalStandardTime": { "type": ["string", "null"] },
-    "availableAllTimes": { "type": ["boolean", "null"] },
-    "availableAllDays": { "type": ["boolean", "null"] },
+    "availableAllTimes": { "type": ["boolean", "null", "string"] },
+    "availableAllDays": { "type": ["boolean", "null", "string"] },
     "daysAvailableBits": { "type": ["string", "null"] },
     "daysAvailableString": {
       "type": ["array", "null"],

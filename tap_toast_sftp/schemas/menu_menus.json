@@ -68,11 +68,11 @@
       "description": "The time of day when a time-based menu stops being available"
     },
     "availableAllTimes": {
-      "type": ["boolean", "null"],
+      "type": ["boolean", "string", "null"],
       "description": "Indicates whether the menu is available at all times of the day"
     },
     "availableAllDays": {
-      "type": ["boolean", "null"],
+      "type": ["boolean", "string", "null"],
       "description": "Indicates whether the menu is available each day of the week"
     },
     "daysAvailableString": {

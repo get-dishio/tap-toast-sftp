@@ -26,8 +26,8 @@
             "endTimeLocalStandardTime": { "type": ["string", "null"] },
             "startTimeHHmmLocalStandardTime": { "type": ["string", "null"] },
             "endTimeHHmmLocalStandardTime": { "type": ["string", "null"] },
-            "availableAllTimes": { "type": ["boolean", "null"] },
-            "availableAllDays": { "type": ["boolean", "null"] },
+            "availableAllTimes": { "type": ["boolean", "null", "string"] },
+            "availableAllDays": { "type": ["boolean", "null", "string"] },
             "daysAvailableBits": { "type": ["string", "null"] },
             "daysAvailableString": {
               "type": ["array", "null"],
@@ -100,7 +100,7 @@
                                     "plu": { "type": ["string", "null"] },
                                     "maxSelections": { "type": ["string", "null"] },
                                     "price": { "type": ["number", "null"] },
-                                    "isDefault": { "type": ["boolean", "null"] },
+                                    "isDefault": { "type": ["boolean", "null", "string"] },
                                     "optionGroups": { "type": ["array", "null"] },
                                     "idString": { "type": ["string", "null"] },
                                     "itemGroupGuid": { "type": ["string", "null"] },
@@ -119,7 +119,7 @@
                           }
                         },
                         "maxSelections": { "type": ["string", "null"] },
-                        "isDefault": { "type": ["boolean", "null"] },
+                        "isDefault": { "type": ["boolean", "null", "string"] },
                         "idString": { "type": ["string", "null"] },
                         "itemGroupGuid": { "type": ["string", "null"] },
                         "calories": { "type": ["number", "null"] },
@@ -162,7 +162,7 @@
                               "orderableOnline": { "type": ["string", "boolean", "null"] },
                               "visibility": { "type": ["string", "null"] },
                               "maxSelections": { "type": ["string", "null"] },
-                              "isDefault": { "type": ["boolean", "null"] },
+                              "isDefault": { "type": ["boolean", "null", "string"] },
                               "itemGroupGuid": { "type": ["string", "null"] }
                             }
                           }
@@ -225,7 +225,7 @@
                   "plu": { "type": ["string", "null"] },
                   "maxSelections": { "type": ["string", "null"] },
                   "price": { "type": ["number", "null"] },
-                  "isDefault": { "type": ["boolean", "null"] },
+                  "isDefault": { "type": ["boolean", "null", "string"] },
                   "optionGroups": { "type": ["array", "null"] },
                   "idString": { "type": ["string", "null"] },
                   "itemGroupGuid": { "type": ["string", "null"] },

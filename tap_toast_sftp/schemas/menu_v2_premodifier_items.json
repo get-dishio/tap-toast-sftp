@@ -11,7 +11,7 @@
     "plu": { "type": ["string", "null"] },
     "maxSelections": { "type": ["string", "null"] },
     "price": { "type": ["number", "null"] },
-    "isDefault": { "type": ["boolean", "null"] },
+    "isDefault": { "type": ["boolean", "null", "string"] },
     "idString": { "type": ["string", "null"] },
     "itemGroupGuid": { "type": ["string", "null"] },
     "calories": { "type": ["number", "null"] },

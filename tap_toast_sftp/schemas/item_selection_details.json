@@ -114,15 +114,15 @@
       "description": "Taxes"
     },
     "void": {
-      "type": ["boolean", "null"],
+      "type": ["boolean", "string", "null"],
       "description": "True or False"
     },
     "deferred": {
-      "type": ["boolean", "null"],
+      "type": ["boolean", "string", "null"],
       "description": "Indicates whether the item has been purchased but not delivered"
     },
     "tax_exempt": {
-      "type": ["boolean", "null"],
+      "type": ["boolean", "string", "null"],
       "description": "Indicates whether tax payments are required for the check"
     },
     "tax_inclusion_option": {

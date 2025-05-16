@@ -21,7 +21,7 @@
       }
     },
     "maxSelections": { "type": ["string", "null"] },
-    "isDefault": { "type": ["boolean", "null"] },
+    "isDefault": { "type": ["boolean", "null", "string"] },
     "idString": { "type": ["string", "null"] },
     "itemGroupGuid": { "type": ["string", "null"] },
     "calories": { "type": ["number", "null"] },

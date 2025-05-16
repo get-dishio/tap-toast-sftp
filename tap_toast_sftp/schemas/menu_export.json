@@ -70,11 +70,11 @@
         "description": "The time of day when a time-based menu stops being available"
       },
       "availableAllTimes": {
-        "type": ["boolean", "null"],
+        "type": ["boolean", "string", "null"],
         "description": "Indicates whether the menu is available at all times of the day"
       },
       "availableAllDays": {
-        "type": ["boolean", "null"],
+        "type": ["boolean", "string", "null"],
         "description": "Indicates whether the menu is available each day of the week"
       },
       "daysAvailableString": {
@@ -150,7 +150,7 @@
                               "plu": { "type": ["string", "null"] },
                               "maxSelections": { "type": ["string", "null"] },
                               "price": { "type": ["number", "null"] },
-                              "isDefault": { "type": ["boolean", "null"] },
+                              "isDefault": { "type": ["boolean", "null", "string"] },
                               "optionGroups": { "type": ["array", "null"] },
                               "idString": { "type": ["string", "null"] },
                               "itemGroupGuid": { "type": ["string", "null"] },
@@ -175,7 +175,7 @@
                   "orderableOnline": { "type": ["string", "boolean", "null"] },
                   "visibility": { "type": ["string", "null"] },
                   "maxSelections": { "type": ["string", "null"] },
-                  "isDefault": { "type": ["boolean", "null"] },
+                  "isDefault": { "type": ["boolean", "null", "string"] },
                   "itemGroupGuid": { "type": ["string", "null"] }
                 }
               }
@@ -225,7 +225,7 @@
                         "orderableOnline": { "type": ["string", "boolean", "null"] },
                         "visibility": { "type": ["string", "null"] },
                         "maxSelections": { "type": ["string", "null"] },
-                        "isDefault": { "type": ["boolean", "null"] },
+                        "isDefault": { "type": ["boolean", "null", "string"] },
                         "itemGroupGuid": { "type": ["string", "null"] }
                       }
                     }
@@ -347,11 +347,11 @@
       "description": "The time of day when a time-based menu stops being available"
     },
     "availableAllTimes": {
-      "type": ["boolean", "null"],
+      "type": ["boolean", "string", "null"],
       "description": "Indicates whether the menu is available at all times of the day"
     },
     "availableAllDays": {
-      "type": ["boolean", "null"],
+      "type": ["boolean", "string", "null"],
       "description": "Indicates whether the menu is available each day of the week"
     },
     "daysAvailableString": {
@@ -430,7 +430,7 @@
                             "plu": { "type": ["string", "null"] },
                             "maxSelections": { "type": ["string", "null"] },
                             "price": { "type": ["number", "null"] },
-                            "isDefault": { "type": ["boolean", "null"] },
+                            "isDefault": { "type": ["boolean", "null", "string"] },
                             "optionGroups": { "type": ["array", "null"] },
                             "idString": { "type": ["string", "null"] },
                             "itemGroupGuid": { "type": ["string", "null"] },
@@ -455,7 +455,7 @@
                 "orderableOnline": { "type": ["string", "boolean", "null"] },
                 "visibility": { "type": ["string", "null"] },
                 "maxSelections": { "type": ["string", "null"] },
-                "isDefault": { "type": ["boolean", "null"] },
+                "isDefault": { "type": ["boolean", "null", "string"] },
                 "itemGroupGuid": { "type": ["string", "null"] }
               }
             }
@@ -505,7 +505,7 @@
                       "orderableOnline": { "type": ["string", "boolean", "null"] },
                       "visibility": { "type": ["string", "null"] },
                       "maxSelections": { "type": ["string", "null"] },
-                      "isDefault": { "type": ["boolean", "null"] },
+                      "isDefault": { "type": ["boolean", "null", "string"] },
                       "itemGroupGuid": { "type": ["string", "null"] }
                     }
                   }
