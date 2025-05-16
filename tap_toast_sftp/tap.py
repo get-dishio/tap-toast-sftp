@@ -139,6 +139,11 @@ class TapToastSFTP(Tap):
                 self.logger.info("Clearing file content cache")
                 self._shared_sftp_client.clear_file_cache()
 
+            # Clear record caches
+            from tap_toast_sftp.client import ToastSFTPStream
+            self.logger.info("Clearing record caches")
+            ToastSFTPStream.clear_all_record_caches()
+
             # Ensure the shared SFTP client is closed when done
             self.close_shared_sftp_client()
 

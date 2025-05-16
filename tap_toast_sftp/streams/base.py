@@ -127,7 +127,7 @@ class CSVSFTPStream(ToastSFTPStream):
             # Return empty generator instead of raising an exception
             return
 
-    def get_records(
+    def _get_records(
         self,
         context: t.Optional[dict] = None,
     ) -> t.Iterable[dict]:
@@ -245,7 +245,7 @@ class XLSSFTPStream(ToastSFTPStream):
             # Return empty generator instead of raising an exception
             return
 
-    def get_records(
+    def _get_records(
         self,
         context: t.Optional[dict] = None,
     ) -> t.Iterable[dict]:
@@ -397,7 +397,7 @@ class JSONSFTPStream(ToastSFTPStream):
             # Return empty generator instead of raising an exception
             return
 
-    def get_records(
+    def _get_records(
         self,
         context: t.Optional[dict] = None,
     ) -> t.Iterable[dict]:

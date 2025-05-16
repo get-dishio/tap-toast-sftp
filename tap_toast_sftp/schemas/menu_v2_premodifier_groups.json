@@ -9,6 +9,7 @@
     "description": { "type": ["string", "null"] },
     "id": { "type": ["string", "null"] },
     "idString": { "type": ["string", "null"] },
+    "isDefault": { "type": ["string", "null"] },
     "location_id": {
       "type": ["string", "null"],
       "description": "Location identifier from configuration"

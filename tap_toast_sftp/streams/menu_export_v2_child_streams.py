@@ -17,7 +17,7 @@ class MenuV2MenusStream(JSONSFTPStream):
     primary_keys = ["location_id", "date", "guid"]
     generate_unique_ids = True
 
-    def get_records(
+    def _get_records(
         self,
         context: t.Optional[dict] = None,
     ) -> t.Iterable[dict]:
@@ -32,7 +32,12 @@ class MenuV2MenusStream(JSONSFTPStream):
         parent_context = context or {}
         parent = self.parent_stream_type(self._tap, shared_sftp_client=self._sftp_client)
 
-        for parent_record in parent.get_records(parent_context):
+        # Get records from parent stream (will use cache if available)
+        parent_records = list(parent.get_records(parent_context))
+        self.logger.info(f"Processing {len(parent_records)} parent records for {self.name}")
+
+        record_count = 0
+        for parent_record in parent_records:
             if not parent_record.get("menus"):
                 continue
 
@@ -49,7 +54,10 @@ class MenuV2MenusStream(JSONSFTPStream):
                 menu["date"] = date
                 menu["menu_export_guid"] = menu_export_guid
 
+                record_count += 1
                 yield menu
+
+        self.logger.info(f"Processed {record_count} records for {self.name}")
 
     def get_child_context(self, record: dict, context: t.Optional[dict]) -> dict:
         """Return a context dictionary for child streams.
@@ -77,7 +85,7 @@ class MenuV2GroupsStream(JSONSFTPStream):
     primary_keys = ["location_id", "date", "menu_guid", "guid"]
     generate_unique_ids = True
 
-    def get_records(
+    def _get_records(
         self,
         context: t.Optional[dict] = None,
     ) -> t.Iterable[dict]:
@@ -92,7 +100,18 @@ class MenuV2GroupsStream(JSONSFTPStream):
         parent_context = context or {}
         parent = self.parent_stream_type(self._tap, shared_sftp_client=self._sftp_client)
 
-        for parent_record in parent.get_records(parent_context):
+        # Get records from parent stream (will use cache if available)
+        parent_records = list(parent.get_records(parent_context))
+        self.logger.info(f"Processing {len(parent_records)} parent records for {self.name}")
+
+        # If we have a menu_guid in the context, filter parent records to only that menu
+        menu_guid = parent_context.get("menu_guid")
+        if menu_guid:
+            parent_records = [r for r in parent_records if r.get("guid") == menu_guid]
+            self.logger.info(f"Filtered to {len(parent_records)} parent records with menu_guid={menu_guid}")
+
+        record_count = 0
+        for parent_record in parent_records:
             if not parent_record.get("groups"):
                 continue
 
@@ -109,7 +128,10 @@ class MenuV2GroupsStream(JSONSFTPStream):
                 group["date"] = date
                 group["menu_guid"] = menu_guid
 
+                record_count += 1
                 yield group
+
+        self.logger.info(f"Processed {record_count} records for {self.name}")
 
     def get_child_context(self, record: dict, context: t.Optional[dict]) -> dict:
         """Return a context dictionary for child streams.
@@ -138,7 +160,7 @@ class MenuV2ItemsStream(JSONSFTPStream):
     primary_keys = ["location_id", "date", "menu_guid", "group_guid", "guid"]
     generate_unique_ids = True
 
-    def get_records(
+    def _get_records(
         self,
         context: t.Optional[dict] = None,
     ) -> t.Iterable[dict]:
@@ -153,7 +175,24 @@ class MenuV2ItemsStream(JSONSFTPStream):
         parent_context = context or {}
         parent = self.parent_stream_type(self._tap, shared_sftp_client=self._sftp_client)
 
-        for parent_record in parent.get_records(parent_context):
+        # Get records from parent stream (will use cache if available)
+        parent_records = list(parent.get_records(parent_context))
+        self.logger.info(f"Processing {len(parent_records)} parent records for {self.name}")
+
+        # If we have a menu_guid and group_guid in the context, filter parent records
+        menu_guid = parent_context.get("menu_guid")
+        group_guid = parent_context.get("group_guid")
+
+        if menu_guid:
+            parent_records = [r for r in parent_records if r.get("menu_guid") == menu_guid]
+            self.logger.info(f"Filtered to {len(parent_records)} parent records with menu_guid={menu_guid}")
+
+        if group_guid:
+            parent_records = [r for r in parent_records if r.get("guid") == group_guid]
+            self.logger.info(f"Filtered to {len(parent_records)} parent records with group_guid={group_guid}")
+
+        record_count = 0
+        for parent_record in parent_records:
             if not parent_record.get("items"):
                 continue
 
@@ -172,7 +211,10 @@ class MenuV2ItemsStream(JSONSFTPStream):
                 item["menu_guid"] = menu_guid
                 item["group_guid"] = group_guid
 
+                record_count += 1
                 yield item
+
+        self.logger.info(f"Processed {record_count} records for {self.name}")
 
     def get_child_context(self, record: dict, context: t.Optional[dict]) -> dict:
         """Return a context dictionary for child streams.
@@ -202,7 +244,7 @@ class MenuV2OptionGroupsStream(JSONSFTPStream):
     primary_keys = ["location_id", "date", "menu_guid", "group_guid", "item_guid", "guid"]
     generate_unique_ids = True
 
-    def get_records(
+    def _get_records(
         self,
         context: t.Optional[dict] = None,
     ) -> t.Iterable[dict]:
@@ -217,7 +259,29 @@ class MenuV2OptionGroupsStream(JSONSFTPStream):
         parent_context = context or {}
         parent = self.parent_stream_type(self._tap, shared_sftp_client=self._sftp_client)
 
-        for parent_record in parent.get_records(parent_context):
+        # Get records from parent stream (will use cache if available)
+        parent_records = list(parent.get_records(parent_context))
+        self.logger.info(f"Processing {len(parent_records)} parent records for {self.name}")
+
+        # If we have context values, filter parent records
+        menu_guid = parent_context.get("menu_guid")
+        group_guid = parent_context.get("group_guid")
+        item_guid = parent_context.get("item_guid")
+
+        if menu_guid:
+            parent_records = [r for r in parent_records if r.get("menu_guid") == menu_guid]
+            self.logger.info(f"Filtered to {len(parent_records)} parent records with menu_guid={menu_guid}")
+
+        if group_guid:
+            parent_records = [r for r in parent_records if r.get("group_guid") == group_guid]
+            self.logger.info(f"Filtered to {len(parent_records)} parent records with group_guid={group_guid}")
+
+        if item_guid:
+            parent_records = [r for r in parent_records if r.get("guid") == item_guid]
+            self.logger.info(f"Filtered to {len(parent_records)} parent records with item_guid={item_guid}")
+
+        record_count = 0
+        for parent_record in parent_records:
             if not parent_record.get("optionGroups"):
                 continue
 
@@ -238,7 +302,10 @@ class MenuV2OptionGroupsStream(JSONSFTPStream):
                 option_group["group_guid"] = group_guid
                 option_group["item_guid"] = item_guid
 
+                record_count += 1
                 yield option_group
+
+        self.logger.info(f"Processed {record_count} records for {self.name}")
 
     def get_child_context(self, record: dict, context: t.Optional[dict]) -> dict:
         """Return a context dictionary for child streams.
@@ -269,7 +336,7 @@ class MenuV2OptionItemsStream(JSONSFTPStream):
     primary_keys = ["location_id", "date", "menu_guid", "group_guid", "item_guid", "option_group_guid", "guid"]
     generate_unique_ids = True
 
-    def get_records(
+    def _get_records(
         self,
         context: t.Optional[dict] = None,
     ) -> t.Iterable[dict]:
@@ -284,7 +351,34 @@ class MenuV2OptionItemsStream(JSONSFTPStream):
         parent_context = context or {}
         parent = self.parent_stream_type(self._tap, shared_sftp_client=self._sftp_client)
 
-        for parent_record in parent.get_records(parent_context):
+        # Get records from parent stream (will use cache if available)
+        parent_records = list(parent.get_records(parent_context))
+        self.logger.info(f"Processing {len(parent_records)} parent records for {self.name}")
+
+        # If we have context values, filter parent records
+        menu_guid = parent_context.get("menu_guid")
+        group_guid = parent_context.get("group_guid")
+        item_guid = parent_context.get("item_guid")
+        option_group_guid = parent_context.get("option_group_guid")
+
+        if menu_guid:
+            parent_records = [r for r in parent_records if r.get("menu_guid") == menu_guid]
+            self.logger.info(f"Filtered to {len(parent_records)} parent records with menu_guid={menu_guid}")
+
+        if group_guid:
+            parent_records = [r for r in parent_records if r.get("group_guid") == group_guid]
+            self.logger.info(f"Filtered to {len(parent_records)} parent records with group_guid={group_guid}")
+
+        if item_guid:
+            parent_records = [r for r in parent_records if r.get("item_guid") == item_guid]
+            self.logger.info(f"Filtered to {len(parent_records)} parent records with item_guid={item_guid}")
+
+        if option_group_guid:
+            parent_records = [r for r in parent_records if r.get("guid") == option_group_guid]
+            self.logger.info(f"Filtered to {len(parent_records)} parent records with option_group_guid={option_group_guid}")
+
+        record_count = 0
+        for parent_record in parent_records:
             if not parent_record.get("items"):
                 continue
 
@@ -307,7 +401,10 @@ class MenuV2OptionItemsStream(JSONSFTPStream):
                 option_item["item_guid"] = item_guid
                 option_item["option_group_guid"] = option_group_guid
 
+                record_count += 1
                 yield option_item
+
+        self.logger.info(f"Processed {record_count} records for {self.name}")
 
 
 class MenuV2PremodifierGroupsStream(JSONSFTPStream):
@@ -319,7 +416,7 @@ class MenuV2PremodifierGroupsStream(JSONSFTPStream):
     primary_keys = ["location_id", "date", "menu_export_guid", "guid"]
     generate_unique_ids = True
 
-    def get_records(
+    def _get_records(
         self,
         context: t.Optional[dict] = None,
     ) -> t.Iterable[dict]:
@@ -334,7 +431,18 @@ class MenuV2PremodifierGroupsStream(JSONSFTPStream):
         parent_context = context or {}
         parent = self.parent_stream_type(self._tap, shared_sftp_client=self._sftp_client)
 
-        for parent_record in parent.get_records(parent_context):
+        # Get records from parent stream (will use cache if available)
+        parent_records = list(parent.get_records(parent_context))
+        self.logger.info(f"Processing {len(parent_records)} parent records for {self.name}")
+
+        # If we have a menu_export_guid in the context, filter parent records
+        menu_export_guid = parent_context.get("menu_export_guid")
+        if menu_export_guid:
+            parent_records = [r for r in parent_records if r.get("guid") == menu_export_guid]
+            self.logger.info(f"Filtered to {len(parent_records)} parent records with menu_export_guid={menu_export_guid}")
+
+        record_count = 0
+        for parent_record in parent_records:
             if not parent_record.get("premodifierGroups"):
                 continue
 
@@ -351,7 +459,10 @@ class MenuV2PremodifierGroupsStream(JSONSFTPStream):
                 premodifier_group["date"] = date
                 premodifier_group["menu_export_guid"] = menu_export_guid
 
+                record_count += 1
                 yield premodifier_group
+
+        self.logger.info(f"Processed {record_count} records for {self.name}")
 
     def get_child_context(self, record: dict, context: t.Optional[dict]) -> dict:
         """Return a context dictionary for child streams.
@@ -380,7 +491,7 @@ class MenuV2PremodifierItemsStream(JSONSFTPStream):
     primary_keys = ["location_id", "date", "menu_export_guid", "premodifier_group_guid", "guid"]
     generate_unique_ids = True
 
-    def get_records(
+    def _get_records(
         self,
         context: t.Optional[dict] = None,
     ) -> t.Iterable[dict]:
@@ -395,7 +506,24 @@ class MenuV2PremodifierItemsStream(JSONSFTPStream):
         parent_context = context or {}
         parent = self.parent_stream_type(self._tap, shared_sftp_client=self._sftp_client)
 
-        for parent_record in parent.get_records(parent_context):
+        # Get records from parent stream (will use cache if available)
+        parent_records = list(parent.get_records(parent_context))
+        self.logger.info(f"Processing {len(parent_records)} parent records for {self.name}")
+
+        # If we have context values, filter parent records
+        menu_export_guid = parent_context.get("menu_export_guid")
+        premodifier_group_guid = parent_context.get("premodifier_group_guid")
+
+        if menu_export_guid:
+            parent_records = [r for r in parent_records if r.get("menu_export_guid") == menu_export_guid]
+            self.logger.info(f"Filtered to {len(parent_records)} parent records with menu_export_guid={menu_export_guid}")
+
+        if premodifier_group_guid:
+            parent_records = [r for r in parent_records if r.get("guid") == premodifier_group_guid]
+            self.logger.info(f"Filtered to {len(parent_records)} parent records with premodifier_group_guid={premodifier_group_guid}")
+
+        record_count = 0
+        for parent_record in parent_records:
             if not parent_record.get("items"):
                 continue
 
@@ -414,4 +542,7 @@ class MenuV2PremodifierItemsStream(JSONSFTPStream):
                 premodifier_item["menu_export_guid"] = menu_export_guid
                 premodifier_item["premodifier_group_guid"] = premodifier_group_guid
 
+                record_count += 1
                 yield premodifier_item
+
+        self.logger.info(f"Processed {record_count} records for {self.name}")

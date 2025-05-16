@@ -498,6 +498,10 @@ class SFTPClient:
 class ToastSFTPStream(Stream):
     """Stream class for ToastSFTP streams."""
 
+    # Class-level cache for processed records
+    # Structure: {stream_name: {context_hash: [records]}}
+    _record_cache = {}
+
     def __init__(self, tap=None, shared_sftp_client=None):
         """Initialize the stream.
 
@@ -510,6 +514,8 @@ class ToastSFTPStream(Stream):
         self._owns_connection = shared_sftp_client is None
         # Flag to control whether to generate unique IDs for records with missing primary keys
         self.generate_unique_ids = True
+        # Flag to indicate if records have been cached
+        self._records_cached = False
 
     @property
     def sftp_client(self) -> SFTPClient:
@@ -801,6 +807,76 @@ class ToastSFTPStream(Stream):
 
         return True
 
+    def _get_context_hash(self, context: t.Optional[dict]) -> str:
+        """Generate a hash for the context to use as a cache key.
+
+        Args:
+            context: The context dictionary.
+
+        Returns:
+            A string hash of the context.
+        """
+        if not context:
+            return "default"
+
+        # Create a sorted, stable representation of the context for hashing
+        context_str = json.dumps(context, sort_keys=True)
+        return hashlib.md5(context_str.encode('utf-8')).hexdigest()
+
+    def cache_records(self, records: list[dict], context: t.Optional[dict] = None) -> None:
+        """Cache records for this stream with the given context.
+
+        Args:
+            records: The records to cache.
+            context: The context used to fetch these records.
+        """
+        context_hash = self._get_context_hash(context)
+
+        # Initialize cache structure if needed
+        if self.name not in self._record_cache:
+            self._record_cache[self.name] = {}
+
+        # Store the records in the cache
+        self._record_cache[self.name][context_hash] = records
+        self._records_cached = True
+        self.logger.info(f"Cached {len(records)} records for stream {self.name} with context hash {context_hash}")
+
+    def get_cached_records(self, context: t.Optional[dict] = None) -> t.Optional[list[dict]]:
+        """Get cached records for this stream with the given context.
+
+        Args:
+            context: The context to get records for.
+
+        Returns:
+            The cached records, or None if no cache exists.
+        """
+        context_hash = self._get_context_hash(context)
+
+        # Check if records are cached
+        if (self.name in self._record_cache and
+            context_hash in self._record_cache[self.name]):
+            self.logger.info(f"Using {len(self._record_cache[self.name][context_hash])} cached records for stream {self.name}")
+            return self._record_cache[self.name][context_hash]
+
+        return None
+
+    def clear_record_cache(self) -> None:
+        """Clear the record cache for this stream."""
+        if self.name in self._record_cache:
+            self._record_cache[self.name] = {}
+            self._records_cached = False
+            self.logger.info(f"Cleared record cache for stream {self.name}")
+
+    @classmethod
+    def clear_all_record_caches(cls) -> None:
+        """Clear all record caches for all streams."""
+        cls._record_cache = {}
+        # We can't use self.logger in a class method, but we can create a logger
+        # that's consistent with how other loggers are created in this file
+        import logging
+        logger = logging.getLogger("tap-toast-sftp.ToastSFTPStream")
+        logger.info("Cleared all record caches")
+
     def get_records(
         self,
         context: Context | None,
@@ -817,6 +893,36 @@ class ToastSFTPStream(Stream):
         Yields:
             Record-type dictionary objects.
         """
+        # Check if records are already cached
+        cached_records = self.get_cached_records(context)
+        if cached_records is not None:
+            for record in cached_records:
+                yield record
+            return
+
+        # If not cached, fetch and cache the records
+        records = []
+        for record in self._get_records(context):
+            records.append(record)
+            yield record
+
+        # Cache the records for future use
+        self.cache_records(records, context)
+
+    def _get_records(
+        self,
+        context: Context | None,
+    ) -> t.Iterable[dict]:
+        """Actual implementation of record fetching logic.
+
+        This method should be implemented by subclasses to fetch records.
+
+        Args:
+            context: Stream partition or context dictionary.
+
+        Yields:
+            Record-type dictionary objects.
+        """
         # This is a base implementation that should be overridden by subclasses
         # to implement specific file parsing logic for each stream
-        raise NotImplementedError("Subclasses must implement get_records")
+        raise NotImplementedError("Subclasses must implement _get_records")
