@@ -47,8 +47,8 @@ class TestLatestDateFolder(unittest.TestCase):
         mock_client.__enter__.return_value = mock_client
         mock_client_class.return_value = mock_client
 
-        # Mock the list_files method to return a list of date folders
-        mock_client.list_files.return_value = ["20241116", "20250506", "20250514"]
+        # Mock the list_files method to return a list of date folders and some non-date folders
+        mock_client.list_files.return_value = ["20241116", "20250506", "20250514", "not_a_date", "123456"]
 
         # Mock the is_directory method to return True for all folders
         mock_client.is_directory.return_value = True
@@ -63,7 +63,7 @@ class TestLatestDateFolder(unittest.TestCase):
         self.assertEqual(result, ["20250514"])
 
         # Assert that the log message indicates we're using the latest folder
-        self.stream.logger.info.assert_any_call("Found 3 date folders. Using latest: 20250514")
+        self.stream.logger.info.assert_any_call("Found 3 potential date folders. Using latest: 20250514")
 
     @patch('tap_toast_sftp.client.SFTPClient')
     def test_get_date_folders_empty(self, mock_client_class):
@@ -86,7 +86,33 @@ class TestLatestDateFolder(unittest.TestCase):
         self.assertEqual(result, [])
 
         # Assert that the log message indicates no folders were found
-        self.stream.logger.info.assert_any_call("No date folders found in /123456")
+        self.stream.logger.info.assert_any_call("No items found in /123456")
+
+    @patch('tap_toast_sftp.client.SFTPClient')
+    def test_get_date_folders_filters_non_date_folders(self, mock_client_class):
+        """Test that get_date_folders correctly filters out non-date folders."""
+        # Mock the SFTP client
+        mock_client = MagicMock()
+        mock_client.__enter__.return_value = mock_client
+        mock_client_class.return_value = mock_client
+
+        # Mock the list_files method to return a mix of date and non-date folders
+        mock_client.list_files.return_value = ["not_a_date", "text", "123", "20250514"]
+
+        # Set up the is_directory method to return True for all folders
+        mock_client.is_directory.return_value = True
+
+        # Set the mock client on the stream
+        self.stream._sftp_client = mock_client
+
+        # Call the method
+        result = self.stream.get_date_folders("123456")
+
+        # Assert that only the date folder is returned
+        self.assertEqual(result, ["20250514"])
+
+        # Assert that the log message indicates we found only one date folder
+        self.stream.logger.info.assert_any_call("Found 1 potential date folders. Using latest: 20250514")
 
     @patch('tap_toast_sftp.client.SFTPClient')
     def test_process_date_folders_parallel(self, mock_client_class):

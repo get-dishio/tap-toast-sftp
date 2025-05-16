@@ -226,7 +226,7 @@ class SFTPClient:
             self._client = None
 
     def list_files(self, path: str) -> list[str]:
-        """List files in a directory with retry logic.
+        """List files in a directory with retry logic and timeout handling.
 
         Args:
             path: The directory path.
@@ -235,15 +235,40 @@ class SFTPClient:
             A list of file names.
         """
         self.connect()
+        self.logger.info(f"Starting to list files in directory: {path}")
 
         # Retry parameters
         max_retries = 3
         retry_delay = 2  # seconds
         retries = 0
 
+        # Set a timeout for the listdir operation
+        timeout = 30  # seconds
+
         while retries < max_retries:
             try:
-                return self._sftp.listdir(path)
+                # Use a separate thread with a timeout to prevent hanging
+                with concurrent.futures.ThreadPoolExecutor() as executor:
+                    future = executor.submit(self._sftp.listdir, path)
+                    try:
+                        result = future.result(timeout=timeout)
+                        self.logger.info(f"Successfully listed {len(result)} files in {path}")
+                        return result
+                    except concurrent.futures.TimeoutError:
+                        self.logger.warning(f"Listing files in {path} timed out after {timeout} seconds")
+                        # Cancel the future if possible
+                        future.cancel()
+                        # Try to recover the connection
+                        self.disconnect()
+                        self.connect()
+                        retries += 1
+                        if retries >= max_retries:
+                            self.logger.error(f"Failed to list files in {path} after {max_retries} attempts due to timeout")
+                            return []
+                        self.logger.warning(f"Retrying list files (attempt {retries}) in {retry_delay} seconds...")
+                        time.sleep(retry_delay)
+                        retry_delay *= 2
+                        continue
             except FileNotFoundError:
                 self.logger.warning(f"Directory not found: {path}")
                 return []
@@ -261,8 +286,11 @@ class SFTPClient:
                 self.logger.error(f"Error listing files in {path}: {e}")
                 return []
 
+        # If we get here, all retries failed
+        return []
+
     def is_directory(self, path: str) -> bool:
-        """Check if a path is a directory with retry logic.
+        """Check if a path is a directory with retry logic and timeout handling.
 
         Args:
             path: The path to check.
@@ -277,9 +305,32 @@ class SFTPClient:
         retry_delay = 2  # seconds
         retries = 0
 
+        # Set a timeout for the stat operation
+        timeout = 15  # seconds
+
         while retries < max_retries:
             try:
-                return self._sftp.stat(path).st_mode & 0o40000 != 0
+                # Use a separate thread with a timeout to prevent hanging
+                with concurrent.futures.ThreadPoolExecutor() as executor:
+                    future = executor.submit(lambda: self._sftp.stat(path).st_mode & 0o40000 != 0)
+                    try:
+                        result = future.result(timeout=timeout)
+                        return result
+                    except concurrent.futures.TimeoutError:
+                        self.logger.warning(f"Checking if {path} is a directory timed out after {timeout} seconds")
+                        # Cancel the future if possible
+                        future.cancel()
+                        # Try to recover the connection
+                        self.disconnect()
+                        self.connect()
+                        retries += 1
+                        if retries >= max_retries:
+                            self.logger.error(f"Failed to check if {path} is a directory after {max_retries} attempts due to timeout")
+                            return False
+                        self.logger.warning(f"Retrying directory check (attempt {retries}) in {retry_delay} seconds...")
+                        time.sleep(retry_delay)
+                        retry_delay *= 2
+                        continue
             except FileNotFoundError:
                 return False
             except (socket.timeout, paramiko.ssh_exception.SSHException, socket.error, IOError) as e:
@@ -296,8 +347,11 @@ class SFTPClient:
                 self.logger.error(f"Error checking if {path} is a directory: {e}")
                 return False
 
+        # If we get here, all retries failed
+        return False
+
     def get_file_content(self, path: str) -> bytes:
-        """Get the content of a file with retry logic.
+        """Get the content of a file with retry logic and timeout handling.
 
         Args:
             path: The file path.
@@ -306,16 +360,45 @@ class SFTPClient:
             The file content as bytes.
         """
         self.connect()
+        self.logger.info(f"Starting to read file: {path}")
 
         # Retry parameters
         max_retries = 3
         retry_delay = 2  # seconds
         retries = 0
 
+        # Set a timeout for the file read operation
+        timeout = 60  # seconds
+
         while retries < max_retries:
             try:
-                with self._sftp.open(path, "rb") as f:
-                    return f.read()
+                # Use a separate thread with a timeout to prevent hanging
+                with concurrent.futures.ThreadPoolExecutor() as executor:
+                    # Define a function to read the file
+                    def read_file():
+                        with self._sftp.open(path, "rb") as f:
+                            return f.read()
+
+                    future = executor.submit(read_file)
+                    try:
+                        result = future.result(timeout=timeout)
+                        self.logger.info(f"Successfully read {len(result)} bytes from {path}")
+                        return result
+                    except concurrent.futures.TimeoutError:
+                        self.logger.warning(f"Reading file {path} timed out after {timeout} seconds")
+                        # Cancel the future if possible
+                        future.cancel()
+                        # Try to recover the connection
+                        self.disconnect()
+                        self.connect()
+                        retries += 1
+                        if retries >= max_retries:
+                            self.logger.error(f"Failed to read file {path} after {max_retries} attempts due to timeout")
+                            return b""
+                        self.logger.warning(f"Retrying file read (attempt {retries}) in {retry_delay} seconds...")
+                        time.sleep(retry_delay)
+                        retry_delay *= 2
+                        continue
             except FileNotFoundError:
                 self.logger.warning(f"File not found: {path}")
                 return b""  # Return empty bytes instead of raising an error
@@ -329,6 +412,12 @@ class SFTPClient:
                 time.sleep(retry_delay)
                 # Exponential backoff
                 retry_delay *= 2
+            except Exception as e:
+                self.logger.error(f"Error reading file {path}: {e}")
+                return b""
+
+        # If we get here, all retries failed
+        return b""
 
     def __enter__(self):
         """Enter context manager."""
@@ -410,6 +499,8 @@ class ToastSFTPStream(Stream):
         """Get the list of date folders for a specific location.
 
         Only returns the latest date folder based on folder name (expected format: YYYYMMDD).
+        Optimized for performance with large numbers of folders by using a heuristic approach
+        to identify date folders without checking if each item is a directory.
 
         Args:
             location_id: The location ID.
@@ -418,25 +509,39 @@ class ToastSFTPStream(Stream):
             List containing only the latest date folder name, or empty list if none found.
         """
         location_path = f"/{location_id}"
-        self.logger.info(f"Listing date folders in {location_path}")
+        self.logger.info(f"Finding latest date folder in {location_path}")
 
         try:
             with self.sftp_client as client:
-                folders = [
-                    folder for folder in client.list_files(location_path)
-                    if client.is_directory(f"{location_path}/{folder}")
-                ]
+                # Get all items in the location directory
+                all_items = client.list_files(location_path)
 
-                if not folders:
-                    self.logger.info(f"No date folders found in {location_path}")
+                if not all_items:
+                    self.logger.info(f"No items found in {location_path}")
                     return []
 
-                # Sort folders by name (assuming YYYYMMDD format)
-                # This will sort in ascending order, so the last one will be the latest
-                sorted_folders = sorted(folders)
-                latest_folder = sorted_folders[-1]
+                # Filter potential date folders based on naming pattern (8 digits)
+                # This avoids having to check if each item is a directory
+                potential_date_folders = [
+                    item for item in all_items
+                    if item.isdigit() and len(item) == 8
+                ]
 
-                self.logger.info(f"Found {len(folders)} date folders. Using latest: {latest_folder}")
+                if not potential_date_folders:
+                    self.logger.info(f"No potential date folders found in {location_path}")
+                    return []
+
+                # Find the latest date folder
+                latest_folder = max(potential_date_folders)
+
+                # Verify that the latest folder is actually a directory
+                # We only need to check one folder instead of all of them
+                latest_folder_path = f"{location_path}/{latest_folder}"
+                if not client.is_directory(latest_folder_path):
+                    self.logger.warning(f"Latest potential date folder {latest_folder} is not a directory")
+                    return []
+
+                self.logger.info(f"Found {len(potential_date_folders)} potential date folders. Using latest: {latest_folder}")
                 return [latest_folder]  # Return a list with only the latest folder
         except Exception as e:
             self.logger.error(f"Error getting date folders for location {location_id}: {e}")
