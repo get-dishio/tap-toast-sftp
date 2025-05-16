@@ -440,6 +440,7 @@ class ToastSFTPStream(Stream):
         """
         super().__init__(tap=tap)
         self._sftp_client = None
+        self._connected = False
 
     @property
     def sftp_client(self) -> SFTPClient:
@@ -451,6 +452,28 @@ class ToastSFTPStream(Stream):
         if self._sftp_client is None:
             self._sftp_client = SFTPClient(self.config)
         return self._sftp_client
+
+    def connect_sftp(self) -> None:
+        """Establish SFTP connection at the beginning of processing.
+
+        This method should be called once at the beginning of get_records
+        to establish a single connection for all file operations.
+        """
+        if not self._connected:
+            self.logger.info("Establishing SFTP connection for stream %s", self.name)
+            self.sftp_client.connect()
+            self._connected = True
+
+    def disconnect_sftp(self) -> None:
+        """Disconnect SFTP connection at the end of processing.
+
+        This method should be called once at the end of get_records
+        to properly close the SFTP connection.
+        """
+        if self._connected and self._sftp_client is not None:
+            self.logger.info("Disconnecting SFTP connection for stream %s", self.name)
+            self.sftp_client.disconnect()
+            self._connected = False
 
     @property
     def locations(self) -> list[dict]:
@@ -512,37 +535,37 @@ class ToastSFTPStream(Stream):
         self.logger.info(f"Finding latest date folder in {location_path}")
 
         try:
-            with self.sftp_client as client:
-                # Get all items in the location directory
-                all_items = client.list_files(location_path)
+            # Use the existing SFTP client connection
+            # Get all items in the location directory
+            all_items = self.sftp_client.list_files(location_path)
 
-                if not all_items:
-                    self.logger.info(f"No items found in {location_path}")
-                    return []
+            if not all_items:
+                self.logger.info(f"No items found in {location_path}")
+                return []
 
-                # Filter potential date folders based on naming pattern (8 digits)
-                # This avoids having to check if each item is a directory
-                potential_date_folders = [
-                    item for item in all_items
-                    if item.isdigit() and len(item) == 8
-                ]
+            # Filter potential date folders based on naming pattern (8 digits)
+            # This avoids having to check if each item is a directory
+            potential_date_folders = [
+                item for item in all_items
+                if item.isdigit() and len(item) == 8
+            ]
 
-                if not potential_date_folders:
-                    self.logger.info(f"No potential date folders found in {location_path}")
-                    return []
+            if not potential_date_folders:
+                self.logger.info(f"No potential date folders found in {location_path}")
+                return []
 
-                # Find the latest date folder
-                latest_folder = max(potential_date_folders)
+            # Find the latest date folder
+            latest_folder = max(potential_date_folders)
 
-                # Verify that the latest folder is actually a directory
-                # We only need to check one folder instead of all of them
-                latest_folder_path = f"{location_path}/{latest_folder}"
-                if not client.is_directory(latest_folder_path):
-                    self.logger.warning(f"Latest potential date folder {latest_folder} is not a directory")
-                    return []
+            # Verify that the latest folder is actually a directory
+            # We only need to check one folder instead of all of them
+            latest_folder_path = f"{location_path}/{latest_folder}"
+            if not self.sftp_client.is_directory(latest_folder_path):
+                self.logger.warning(f"Latest potential date folder {latest_folder} is not a directory")
+                return []
 
-                self.logger.info(f"Found {len(potential_date_folders)} potential date folders. Using latest: {latest_folder}")
-                return [latest_folder]  # Return a list with only the latest folder
+            self.logger.info(f"Found {len(potential_date_folders)} potential date folders. Using latest: {latest_folder}")
+            return [latest_folder]  # Return a list with only the latest folder
         except Exception as e:
             self.logger.error(f"Error getting date folders for location {location_id}: {e}")
             return []

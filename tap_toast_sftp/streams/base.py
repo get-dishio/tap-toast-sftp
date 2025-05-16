@@ -78,45 +78,45 @@ class CSVSFTPStream(ToastSFTPStream):
         self.logger.info(f"Processing file {file_path} for location {location_id}, date {date_folder}")
 
         try:
-            with self.sftp_client as client:
-                content = client.get_file_content(file_path)
+            # Use the existing SFTP client connection
+            content = self.sftp_client.get_file_content(file_path)
 
-                # If file not found or empty, return empty generator
-                if not content:
-                    self.logger.info(f"File {file_path} not found or empty. Skipping.")
-                    return
+            # If file not found or empty, return empty generator
+            if not content:
+                self.logger.info(f"File {file_path} not found or empty. Skipping.")
+                return
 
-                csv_data = content.decode("utf-8")
+            csv_data = content.decode("utf-8")
 
-                reader = csv.DictReader(
-                    io.StringIO(csv_data),
-                    delimiter=self.delimiter,
-                    quotechar=self.quotechar,
-                )
+            reader = csv.DictReader(
+                io.StringIO(csv_data),
+                delimiter=self.delimiter,
+                quotechar=self.quotechar,
+            )
 
-                # Process records in batches
-                batch = []
-                for row in reader:
-                    # Convert empty strings to None and transform field names to snake_case
-                    record = {
-                        self.transform_field_name(k): (v if v != "" else None)
-                        for k, v in row.items()
-                    }
-                    # Add location_id and date to the record
-                    record["location_id"] = location_id
-                    record["date"] = date_folder
+            # Process records in batches
+            batch = []
+            for row in reader:
+                # Convert empty strings to None and transform field names to snake_case
+                record = {
+                    self.transform_field_name(k): (v if v != "" else None)
+                    for k, v in row.items()
+                }
+                # Add location_id and date to the record
+                record["location_id"] = location_id
+                record["date"] = date_folder
 
-                    batch.append(record)
+                batch.append(record)
 
-                    # Yield batch when it reaches the batch size
-                    if len(batch) >= self.batch_size:
-                        for record in batch:
-                            yield record
-                        batch = []
+                # Yield batch when it reaches the batch size
+                if len(batch) >= self.batch_size:
+                    for record in batch:
+                        yield record
+                    batch = []
 
-                # Yield any remaining records
-                for record in batch:
-                    yield record
+            # Yield any remaining records
+            for record in batch:
+                yield record
 
         except Exception as e:
             self.logger.error(f"Error processing file {file_path} for location {location_id}, date {date_folder}: {e}")
@@ -143,13 +143,20 @@ class CSVSFTPStream(ToastSFTPStream):
             self.logger.warning("No location IDs configured. No data will be extracted.")
             return
 
-        for location_id in location_ids:
-            # Process date folders in parallel
-            yield from self.process_date_folders_parallel(
-                location_id,
-                self.process_csv_file,
-                max_workers=self.max_workers,
-            )
+        try:
+            # Establish a single SFTP connection for all file operations
+            self.connect_sftp()
+
+            for location_id in location_ids:
+                # Process date folders in parallel
+                yield from self.process_date_folders_parallel(
+                    location_id,
+                    self.process_csv_file,
+                    max_workers=self.max_workers,
+                )
+        finally:
+            # Ensure connection is closed even if an exception occurs
+            self.disconnect_sftp()
 
 
 class XLSSFTPStream(ToastSFTPStream):
@@ -184,46 +191,46 @@ class XLSSFTPStream(ToastSFTPStream):
         self.logger.info(f"Processing file {file_path} for location {location_id}, date {date_folder}")
 
         try:
-            with self.sftp_client as client:
-                content = client.get_file_content(file_path)
+            # Use the existing SFTP client connection
+            content = self.sftp_client.get_file_content(file_path)
 
-                # If file not found or empty, return empty generator
-                if not content:
-                    self.logger.info(f"File {file_path} not found or empty. Skipping.")
-                    return
+            # If file not found or empty, return empty generator
+            if not content:
+                self.logger.info(f"File {file_path} not found or empty. Skipping.")
+                return
 
-                # Create a BytesIO object from the content
-                excel_data = io.BytesIO(content)
+            # Create a BytesIO object from the content
+            excel_data = io.BytesIO(content)
 
-                # Read the Excel file into a pandas DataFrame
-                df = pd.read_excel(excel_data, sheet_name=self.sheet_name)
+            # Read the Excel file into a pandas DataFrame
+            df = pd.read_excel(excel_data, sheet_name=self.sheet_name)
 
-                # Convert DataFrame to records
-                records = df.to_dict(orient="records")
+            # Convert DataFrame to records
+            records = df.to_dict(orient="records")
 
-                # Process records in batches
-                batch = []
-                for record in records:
-                    # Convert NaN values to None and transform field names to snake_case
-                    record = {
-                        self.transform_field_name(k): (None if pd.isna(v) else v)
-                        for k, v in record.items()
-                    }
-                    # Add location_id and date to the record
-                    record["location_id"] = location_id
-                    record["date"] = date_folder
+            # Process records in batches
+            batch = []
+            for record in records:
+                # Convert NaN values to None and transform field names to snake_case
+                record = {
+                    self.transform_field_name(k): (None if pd.isna(v) else v)
+                    for k, v in record.items()
+                }
+                # Add location_id and date to the record
+                record["location_id"] = location_id
+                record["date"] = date_folder
 
-                    batch.append(record)
+                batch.append(record)
 
-                    # Yield batch when it reaches the batch size
-                    if len(batch) >= self.batch_size:
-                        for rec in batch:
-                            yield rec
-                        batch = []
+                # Yield batch when it reaches the batch size
+                if len(batch) >= self.batch_size:
+                    for rec in batch:
+                        yield rec
+                    batch = []
 
-                # Yield any remaining records
-                for record in batch:
-                    yield record
+            # Yield any remaining records
+            for record in batch:
+                yield record
 
         except Exception as e:
             self.logger.error(f"Error processing file {file_path} for location {location_id}, date {date_folder}: {e}")
@@ -250,13 +257,20 @@ class XLSSFTPStream(ToastSFTPStream):
             self.logger.warning("No location IDs configured. No data will be extracted.")
             return
 
-        for location_id in location_ids:
-            # Process date folders in parallel
-            yield from self.process_date_folders_parallel(
-                location_id,
-                self.process_excel_file,
-                max_workers=self.max_workers,
-            )
+        try:
+            # Establish a single SFTP connection for all file operations
+            self.connect_sftp()
+
+            for location_id in location_ids:
+                # Process date folders in parallel
+                yield from self.process_date_folders_parallel(
+                    location_id,
+                    self.process_excel_file,
+                    max_workers=self.max_workers,
+                )
+        finally:
+            # Ensure connection is closed even if an exception occurs
+            self.disconnect_sftp()
 
 
 class JSONSFTPStream(ToastSFTPStream):
@@ -290,78 +304,78 @@ class JSONSFTPStream(ToastSFTPStream):
         folder_path = f"/{location_id}/{date_folder}"
 
         try:
-            with self.sftp_client as client:
-                # List all files in the date folder
-                files = client.list_files(folder_path)
+            # Use the existing SFTP client connection
+            # List all files in the date folder
+            files = self.sftp_client.list_files(folder_path)
 
-                # If folder doesn't exist or is empty, return empty generator
-                if not files:
-                    self.logger.info(f"No files found in {folder_path}. Skipping.")
-                    return
+            # If folder doesn't exist or is empty, return empty generator
+            if not files:
+                self.logger.info(f"No files found in {folder_path}. Skipping.")
+                return
 
-                # Find files matching the pattern
-                import fnmatch
-                matching_files = [f for f in files if fnmatch.fnmatch(f, self.file_pattern)]
+            # Find files matching the pattern
+            import fnmatch
+            matching_files = [f for f in files if fnmatch.fnmatch(f, self.file_pattern)]
 
-                if not matching_files:
-                    self.logger.info(f"No files matching pattern {self.file_pattern} found in {folder_path}. Skipping.")
-                    return
+            if not matching_files:
+                self.logger.info(f"No files matching pattern {self.file_pattern} found in {folder_path}. Skipping.")
+                return
 
-                for file_name in matching_files:
-                    file_path = f"{folder_path}/{file_name}"
-                    self.logger.info(f"Processing file {file_path} for location {location_id}, date {date_folder}")
+            for file_name in matching_files:
+                file_path = f"{folder_path}/{file_name}"
+                self.logger.info(f"Processing file {file_path} for location {location_id}, date {date_folder}")
 
-                    try:
-                        content = client.get_file_content(file_path)
+                try:
+                    content = self.sftp_client.get_file_content(file_path)
 
-                        # If file not found or empty, skip to next file
-                        if not content:
-                            self.logger.info(f"File {file_path} not found or empty. Skipping.")
+                    # If file not found or empty, skip to next file
+                    if not content:
+                        self.logger.info(f"File {file_path} not found or empty. Skipping.")
+                        continue
+
+                    json_data = json.loads(content.decode("utf-8"))
+
+                    # Extract records based on records_path if provided
+                    records = json_data
+                    if self.records_path:
+                        try:
+                            for key in self.records_path.split("."):
+                                records = records[key]
+                        except (KeyError, TypeError):
+                            self.logger.warning(f"Could not find records at path '{self.records_path}' in {file_path}. Skipping.")
                             continue
 
-                        json_data = json.loads(content.decode("utf-8"))
+                    # Process records in batches
+                    batch = []
 
-                        # Extract records based on records_path if provided
-                        records = json_data
-                        if self.records_path:
-                            try:
-                                for key in self.records_path.split("."):
-                                    records = records[key]
-                            except (KeyError, TypeError):
-                                self.logger.warning(f"Could not find records at path '{self.records_path}' in {file_path}. Skipping.")
-                                continue
-
-                        # Process records in batches
-                        batch = []
-
-                        # Handle both array and object responses
-                        if isinstance(records, list):
-                            for record in records:
-                                # Add location_id and date to the record
-                                record["location_id"] = location_id
-                                record["date"] = date_folder
-
-                                batch.append(record)
-
-                                # Yield batch when it reaches the batch size
-                                if len(batch) >= self.batch_size:
-                                    for rec in batch:
-                                        yield rec
-                                    batch = []
-                        else:
+                    # Handle both array and object responses
+                    if isinstance(records, list):
+                        for record in records:
                             # Add location_id and date to the record
-                            records["location_id"] = location_id
-                            records["date"] = date_folder
-                            yield records
+                            record["location_id"] = location_id
+                            record["date"] = date_folder
 
-                        # Yield any remaining records
-                        for record in batch:
-                            yield record
+                            batch.append(record)
 
-                    except Exception as e:
-                        self.logger.error(f"Error processing file {file_path} for location {location_id}, date {date_folder}: {e}")
-                        # Continue with next file instead of failing completely
-                        continue
+                            # Yield batch when it reaches the batch size
+                            if len(batch) >= self.batch_size:
+                                for rec in batch:
+                                    yield rec
+                                batch = []
+                    else:
+                        # Add location_id and date to the record
+                        records["location_id"] = location_id
+                        records["date"] = date_folder
+                        yield records
+
+                    # Yield any remaining records
+                    for record in batch:
+                        yield record
+
+                except Exception as e:
+                    self.logger.error(f"Error processing file {file_path} for location {location_id}, date {date_folder}: {e}")
+                    # Continue with next file instead of failing completely
+                    continue
         except Exception as e:
             self.logger.error(f"Error processing folder {folder_path} for location {location_id}: {e}")
             # Return empty generator instead of raising an exception
@@ -387,10 +401,17 @@ class JSONSFTPStream(ToastSFTPStream):
             self.logger.warning("No location IDs configured. No data will be extracted.")
             return
 
-        for location_id in location_ids:
-            # Process date folders in parallel
-            yield from self.process_date_folders_parallel(
-                location_id,
-                self.process_json_files,
-                max_workers=self.max_workers,
-            )
+        try:
+            # Establish a single SFTP connection for all file operations
+            self.connect_sftp()
+
+            for location_id in location_ids:
+                # Process date folders in parallel
+                yield from self.process_date_folders_parallel(
+                    location_id,
+                    self.process_json_files,
+                    max_workers=self.max_workers,
+                )
+        finally:
+            # Ensure connection is closed even if an exception occurs
+            self.disconnect_sftp()
