@@ -19,6 +19,12 @@ This tap supports extracting data from the following Toast data export files:
 | kitchen_timings | KitchenTimings.csv | CSV | Information about kitchen tickets |
 | menu_export | MenuExport_*.json | JSON | Information about menus |
 | menu_export_v2 | MenuExportV2_*.json | JSON | Enhanced information about menus |
+| menu_menus | MenuExport*.json | JSON | Toast menu objects (flat, one per menu) |
+| menu_groups | MenuExport*.json | JSON | Toast menu group objects with parent menu context |
+| menu_items | MenuExport*.json | JSON | Toast menu item objects with full parent context |
+| menu_option_groups | MenuExport*.json | JSON | Toast menu option group objects with full parent context |
+| menu_option_items | MenuExport*.json | JSON | Toast menu option item objects with full parent context |
+| menu_prices | MenuExport*.json | JSON | Toast menu item price objects with full parent context |
 | modifiers_selection_details | ModifiersSelectionDetails.csv | CSV | Information about modifiers applied to items |
 | order_details | OrderDetails.csv | CSV | Information about orders |
 | payment_details | PaymentDetails.csv | CSV | Information about payments |
