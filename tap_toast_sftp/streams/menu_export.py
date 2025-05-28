@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from tap_toast_sftp.streams.base import JSONSFTPStream
-
+import fnmatch
 
 class MenuExportStream(JSONSFTPStream):
     """Stream for Toast menu export data from JSON files."""
@@ -13,7 +13,7 @@ class MenuExportStream(JSONSFTPStream):
     primary_keys = ["location_id", "date"]
     generate_unique_ids = True
 
-    def process_json_files(self, location_id, date_folder, folder_path):
+    def process_json_files(self, location_id, date_folder):
         """Process JSON files in the given folder.
 
         This overrides the base implementation to handle the list format of MenuExport files.
@@ -21,16 +21,24 @@ class MenuExportStream(JSONSFTPStream):
         Args:
             location_id: The location ID.
             date_folder: The date folder name.
-            folder_path: The path to the folder containing the files.
 
         Yields:
             Record-type dictionary objects.
         """
+        folder_path = f"/{location_id}/{date_folder}"
         try:
-            # Get list of files matching the pattern
-            file_paths = self._sftp_client.list_files(folder_path, self.file_pattern)
+            # List all files in the folder
+            files = self._sftp_client.list_files(folder_path)
 
-            for file_path in file_paths:
+            # Filter files using file_pattern
+            matching_files = [f for f in files if fnmatch.fnmatch(f, self.file_pattern)]
+
+            if not matching_files:
+                self.logger.info(f"No files matching pattern {self.file_pattern} found in {folder_path}. Skipping.")
+                return
+
+            for file_name in matching_files:
+                file_path = f"{folder_path}/{file_name}"
                 try:
                     # Get file content
                     json_data = self._sftp_client.get_json_file(file_path)
