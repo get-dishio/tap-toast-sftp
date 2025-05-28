@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Menu Prices Schema",
+  "type": ["object", "null"],
+  "properties": {
+    "entityType": {
+      "type": ["string", "null"],
+      "description": "The type of the menu component described by this JSON object"
+    },
+    "name": {
+      "type": ["string", "null"],
+      "description": "A descriptive identifier for the price"
+    },
+    "guid": {
+      "type": ["string", "null"],
+      "description": "The unique identifier for the price, assigned by the Toast POS"
+    },
+    "price": {
+      "type": ["number", "null"],
+      "description": "The price value"
+    },
+    "amount": {
+      "type": ["number", "null"],
+      "description": "The price amount"
+    },
+    "currency": {
+      "type": ["string", "null"],
+      "description": "The currency code for the price"
+    },
+    "priceType": {
+      "type": ["string", "null"],
+      "description": "The type of price (e.g., base, size-based)"
+    },
+    "size": {
+      "type": ["string", "null"],
+      "description": "The size associated with this price"
+    },
+    "location_id": {
+      "type": ["string", "null"],
+      "description": "Location identifier from configuration"
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date folder name from SFTP path"
+    },
+    "menu_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the parent menu"
+    },
+    "group_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the parent menu group"
+    },
+    "item_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the parent menu item"
+    },
+    "price_id": {
+      "type": ["string", "null"],
+      "description": "Generated unique identifier for the price record"
+    }
+  },
+  "required": ["location_id", "date", "menu_guid", "group_guid", "item_guid", "price_id"]
+}

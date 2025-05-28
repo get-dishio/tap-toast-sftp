@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Menu Option Items Schema",
+  "type": ["object", "null"],
+  "properties": {
+    "entityType": {
+      "type": ["string", "null"],
+      "description": "The type of the menu component described by this JSON object"
+    },
+    "name": {
+      "type": ["string", "null"],
+      "description": "A descriptive identifier for the option item"
+    },
+    "guid": {
+      "type": ["string", "null"],
+      "description": "The unique identifier for the option item, assigned by the Toast POS"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "A written description of the option item"
+    },
+    "sku": {
+      "type": ["string", "null"],
+      "description": "The stock keeping unit (SKU) for the option item"
+    },
+    "plu": {
+      "type": ["string", "null"],
+      "description": "The price look-up (PLU) code for the option item"
+    },
+    "maxSelections": {
+      "type": ["integer", "null"],
+      "description": "The maximum number of times this option can be selected"
+    },
+    "price": {
+      "type": ["number", "null"],
+      "description": "The price of the option item"
+    },
+    "isDefault": {
+      "type": ["boolean", "null"],
+      "description": "Indicates whether this option is selected by default"
+    },
+    "idString": {
+      "type": ["string", "null"],
+      "description": "This field is for Toast internal use only"
+    },
+    "itemGroupGuid": {
+      "type": ["string", "null"],
+      "description": "The unique identifier for the item group"
+    },
+    "calories": {
+      "type": ["integer", "null"],
+      "description": "The number of calories in the option item"
+    },
+    "orderableOnline": {
+      "type": ["string", "null"],
+      "description": "Indicates whether the option item is available for online ordering"
+    },
+    "location_id": {
+      "type": ["string", "null"],
+      "description": "Location identifier from configuration"
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date folder name from SFTP path"
+    },
+    "menu_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the parent menu"
+    },
+    "group_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the parent menu group"
+    },
+    "item_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the parent menu item"
+    },
+    "option_group_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the parent option group"
+    }
+  },
+  "required": ["location_id", "date", "menu_guid", "group_guid", "item_guid", "option_group_guid", "guid"]
+}

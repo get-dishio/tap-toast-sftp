@@ -97,10 +97,6 @@
     "date": {
       "type": ["string", "null"],
       "description": "Date folder name from SFTP path"
-    },
-    "menu_guid": {
-      "type": ["string", "null"],
-      "description": "Unique identifier for the menu"
     }
   },
   "required": ["location_id", "date", "guid"]

@@ -8,20 +8,13 @@ from tap_toast_sftp.streams.check_details import CheckDetailsStream
 from tap_toast_sftp.streams.house_account_export import HouseAccountExportStream
 from tap_toast_sftp.streams.item_selection_details import ItemSelectionDetailsStream
 from tap_toast_sftp.streams.kitchen_timings import KitchenTimingsStream
-from tap_toast_sftp.streams.menu_export import MenuExportStream, MenuExportV2Stream
-from tap_toast_sftp.streams.menu_export_child_streams import (
+from tap_toast_sftp.streams.menu_streams import (
     MenuMenusStream,
     MenuGroupsStream,
-    MenuGroupItemsStream,
-)
-from tap_toast_sftp.streams.menu_export_v2_child_streams import (
-    MenuV2MenusStream,
-    MenuV2GroupsStream,
-    MenuV2ItemsStream,
-    MenuV2OptionGroupsStream,
-    MenuV2OptionItemsStream,
-    MenuV2PremodifierGroupsStream,
-    MenuV2PremodifierItemsStream,
+    MenuItemsStream,
+    MenuOptionGroupsStream,
+    MenuOptionItemsStream,
+    MenuPricesStream,
 )
 from tap_toast_sftp.streams.modifiers_selection_details import ModifiersSelectionDetailsStream
 from tap_toast_sftp.streams.order_details import OrderDetailsStream
@@ -39,18 +32,12 @@ __all__ = [
     "HouseAccountExportStream",
     "ItemSelectionDetailsStream",
     "KitchenTimingsStream",
-    "MenuExportStream",
-    "MenuExportV2Stream",
     "MenuMenusStream",
     "MenuGroupsStream",
-    "MenuGroupItemsStream",
-    "MenuV2MenusStream",
-    "MenuV2GroupsStream",
-    "MenuV2ItemsStream",
-    "MenuV2OptionGroupsStream",
-    "MenuV2OptionItemsStream",
-    "MenuV2PremodifierGroupsStream",
-    "MenuV2PremodifierItemsStream",
+    "MenuItemsStream",
+    "MenuOptionGroupsStream",
+    "MenuOptionItemsStream",
+    "MenuPricesStream",
     "ModifiersSelectionDetailsStream",
     "OrderDetailsStream",
     "PaymentDetailsStream",

@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Menu Option Groups Schema",
+  "type": ["object", "null"],
+  "properties": {
+    "entityType": {
+      "type": ["string", "null"],
+      "description": "The type of the menu component described by this JSON object"
+    },
+    "name": {
+      "type": ["string", "null"],
+      "description": "A descriptive identifier for the option group"
+    },
+    "guid": {
+      "type": ["string", "null"],
+      "description": "The unique identifier for the option group, assigned by the Toast POS"
+    },
+    "minSelections": {
+      "type": ["integer", "null"],
+      "description": "The minimum number of options that must be selected from this group"
+    },
+    "maxSelections": {
+      "type": ["integer", "null"],
+      "description": "The maximum number of options that can be selected from this group"
+    },
+    "pricingMode": {
+      "type": ["string", "null"],
+      "description": "The pricing mode for the option group"
+    },
+    "idString": {
+      "type": ["string", "null"],
+      "description": "This field is for Toast internal use only"
+    },
+    "visibility": {
+      "type": ["string", "null"],
+      "description": "Indicates where the option group is displayed and who can see it"
+    },
+    "defaultOptionsChargePrice": {
+      "type": ["string", "null"],
+      "description": "Indicates whether default options charge a price"
+    },
+    "defaultOptionsSubstitutionPricing": {
+      "type": ["string", "null"],
+      "description": "The substitution pricing for default options"
+    },
+    "pricingStrategy": {
+      "type": ["string", "null"],
+      "description": "The pricing strategy for the option group"
+    },
+    "pricingStrategyRules": {
+      "type": ["array", "null"],
+      "description": "A JSON array of pricing strategy rules"
+    },
+    "location_id": {
+      "type": ["string", "null"],
+      "description": "Location identifier from configuration"
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date folder name from SFTP path"
+    },
+    "menu_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the parent menu"
+    },
+    "group_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the parent menu group"
+    },
+    "item_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the parent menu item"
+    }
+  },
+  "required": ["location_id", "date", "menu_guid", "group_guid", "item_guid", "guid"]
+}

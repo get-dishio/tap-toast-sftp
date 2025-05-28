@@ -1,41 +1,76 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Menu Items Schema",
-  "type": "object",
+  "type": ["object", "null"],
   "properties": {
-    "item_id": {
+    "entityType": {
       "type": ["string", "null"],
-      "description": "Unique item identifier"
+      "description": "The type of the menu component described by this JSON object"
     },
     "name": {
       "type": ["string", "null"],
-      "description": "Item name"
+      "description": "A descriptive identifier for the menu item"
+    },
+    "guid": {
+      "type": ["string", "null"],
+      "description": "The unique identifier for the menu item, assigned by the Toast POS"
     },
     "description": {
       "type": ["string", "null"],
-      "description": "Item description"
+      "description": "A written description of the menu item"
+    },
+    "sku": {
+      "type": ["string", "null"],
+      "description": "The stock keeping unit (SKU) for the menu item"
+    },
+    "plu": {
+      "type": ["string", "null"],
+      "description": "The price look-up (PLU) code for the menu item"
     },
     "price": {
       "type": ["number", "null"],
-      "description": "Item price"
+      "description": "The price of the menu item"
     },
-    "category": {
+    "idString": {
       "type": ["string", "null"],
-      "description": "Item category"
+      "description": "This field is for Toast internal use only"
     },
-    "active": {
-      "type": ["string", "null"],
-      "description": "Whether the item is active"
+    "calories": {
+      "type": ["integer", "null"],
+      "description": "The number of calories in the menu item"
     },
-    "last_updated": {
+    "imageLink": {
       "type": ["string", "null"],
-      "format": "date-time",
-      "description": "Last update timestamp"
+      "description": "A URL to an image located on Amazon S3"
+    },
+    "unitOfMeasure": {
+      "type": ["string", "null"],
+      "description": "The unit of measure for the menu item"
+    },
+    "orderableOnline": {
+      "type": ["string", "null"],
+      "description": "Indicates whether the menu item is available for online ordering"
+    },
+    "visibility": {
+      "type": ["string", "null"],
+      "description": "Indicates where the menu item is displayed and who can see it"
     },
     "location_id": {
       "type": ["string", "null"],
-      "description": "Location identifier"
+      "description": "Location identifier from configuration"
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date folder name from SFTP path"
+    },
+    "menu_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the parent menu"
+    },
+    "group_guid": {
+      "type": ["string", "null"],
+      "description": "Unique identifier for the parent menu group"
     }
   },
-  "required": ["item_id", "location_id"]
+  "required": ["location_id", "date", "menu_guid", "group_guid", "guid"]
 }

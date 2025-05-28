@@ -3,21 +3,46 @@
   "title": "Menu Groups Schema",
   "type": ["object", "null"],
   "properties": {
-    "entityType": { "type": ["string", "null"] },
-    "id": { "type": ["string", "null"] },
-    "idString": { "type": ["string", "null"] },
-    "guid": { "type": ["string", "null"] },
-    "name": { "type": ["string", "null"] },
-    "description": { "type": ["string", "null"] },
-    "imageLink": { "type": ["string", "null"] },
-    "images": {
-      "type": ["object", "null"],
-      "properties": {
-        "item": { "type": ["string", "null"] }
-      }
+    "entityType": {
+      "type": ["string", "null"],
+      "description": "The type of the menu component described by this JSON object"
     },
-    "orderableOnline": { "type": ["string", "null"] },
-    "visibility": { "type": ["string", "null"] },
+    "id": {
+      "type": ["integer", "null"],
+      "description": "The unique identifier for the menu group"
+    },
+    "idString": {
+      "type": ["string", "null"],
+      "description": "This field is for Toast internal use only"
+    },
+    "guid": {
+      "type": ["string", "null"],
+      "description": "The unique identifier for the menu group, assigned by the Toast POS"
+    },
+    "name": {
+      "type": ["string", "null"],
+      "description": "A descriptive identifier for the menu group"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "A written description of the menu group"
+    },
+    "imageLink": {
+      "type": ["string", "null"],
+      "description": "A URL to an image located on Amazon S3"
+    },
+    "orderableOnline": {
+      "type": ["string", "null"],
+      "description": "Indicates whether the menu group is available for online ordering"
+    },
+    "visibility": {
+      "type": ["string", "null"],
+      "description": "Indicates where the menu group is displayed and who can see it"
+    },
+    "images": {
+      "type": ["array", "null"],
+      "description": "A JSON array of image objects"
+    },
     "location_id": {
       "type": ["string", "null"],
       "description": "Location identifier from configuration"
